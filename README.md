@@ -42,11 +42,11 @@ I became particularly interested in whether a neural network's representation of
 
 **Setup**
 
-I constructed hybrid visual stimuli combining different semantic components, such as a **dog body with a cat head**, and examined how these stimuli were represented in CLIP's embedding space.
+I constructed hybrid visual stimuli combining different semantic components, such as a **dog body with a cat head**, and examined how these stimuli were represented in **CLIP's embedding space**.
 
 I compared the representation of the hybrid concept with the representations of its component concepts and investigated whether the hybrid representation could be explained as a combination of these components.
 
-I then explored an adaptive linear-combination model in which the contribution of each semantic component changes according to the visual composition of the stimulus.
+I then explored an **adaptive linear-combination model** in which the contribution of each semantic component changes according to the visual composition of the stimulus.
 
 **Conclusion**
 
@@ -74,7 +74,7 @@ Together, these projects reflect my early interest in studying neural networks n
 
 ## Research Process
 
-These projects were independently developed out of personal interest during my late high school and early undergraduate years. I learned the relevant concepts largely through reading papers, discussing ideas, formulating research questions, writing and debugging code, and iteratively designing and analyzing experiments.
+These projects were independently developed out of personal interest during my late high school and early undergraduate years. I learned the relevant concepts largely through reading papers, discussing ideas, formulating research questions, writing and debugging code, and iteratively designing and analyzing experiments by discussing my questions and understandings hundreds of hours with AI.
 
 At the time, I did not have formal training in research methodology, cognitive neuroscience, or representation learning. As a result, these projects were exploratory, and some of the questions and interpretations evolved substantially during the process.
 
