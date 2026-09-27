@@ -1,9 +1,17 @@
-
 # Representation Alignment
 
 This repository collects a series of self-directed experiments exploring the nature and properties of neural representations at the intersection of artificial intelligence and cognitive science.
 
 These projects were developed during my late high school and early undergraduate years, driven by my interest in understanding what neural networks learn internally, how information is represented, and how artificial representations relate to human cognition.
+
+## Research Themes
+
+The repository currently focuses on two related directions:
+
+1. **Model–brain correspondence** — comparing the geometry of artificial visual representations with biological visual representations.
+2. **Semantic composition** — studying how multiple concepts are combined inside a learned embedding space.
+
+A short conceptual overview is available in [`theory/representation_questions.md`](theory/representation_questions.md).
 
 ## Projects
 
@@ -11,7 +19,7 @@ These projects were developed during my late high school and early undergraduate
 
 **Motivation**
 
-Deep neural networks and the human visual system both appear to process visual information hierarchically, I was interested in whether the internal representations of a neural network among distinct layers would show different degrees of correspondence with different levels of the human visual hierarchy.
+Deep neural networks and the human visual system both appear to process visual information hierarchically. I was interested in whether the internal representations of a neural network across distinct layers would show different degrees of correspondence with different levels of the human visual hierarchy.
 
 **Setup**
 
@@ -59,6 +67,31 @@ This experiment motivated a broader question that continues to interest me:
 > **How are multiple concepts combined and transformed within the representation space of a neural network?**
 
 ---
+
+## Repository Structure
+
+```text
+representation-alignment-/
+├── README.md
+├── requirements.txt
+├── .gitignore
+├── data/
+│   └── README.md
+└── theory/
+    └── representation_questions.md
+```
+
+Experiment code and notebooks can be organized into dedicated subdirectories as they are added.
+
+## Reproducibility
+
+Install the base environment with:
+
+```bash
+pip install -r requirements.txt
+```
+
+Large datasets, extracted activations, model checkpoints, and generated analysis artifacts should not be committed directly to the repository. Dataset-specific instructions and expected file layouts should be documented in [`data/README.md`](data/README.md) and in the corresponding experiment directory.
 
 ## Research Motivation
 
