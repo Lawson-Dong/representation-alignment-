@@ -6,10 +6,11 @@ These projects were developed during my late high school and early undergraduate
 
 ## Research Themes
 
-The repository currently focuses on two related directions:
+The repository currently focuses on three related directions:
 
 1. **Model–brain correspondence** — comparing the geometry of artificial visual representations with biological visual representations.
 2. **Semantic composition** — studying how multiple concepts are combined inside a learned embedding space.
+3. **Representation-vector geometric dynamics** — tracking how class geometry and local label mixing change across successive neural-network blocks.
 
 A short conceptual overview is available in [`theory/representation_questions.md`](theory/representation_questions.md).
 
@@ -68,6 +69,38 @@ This experiment motivated a broader question that continues to interest me:
 
 ---
 
+### 3. Representation-Vector Geometric Dynamics
+
+**Research question**
+
+How does the geometry of image representations change as the same inputs propagate through a frozen visual network?
+
+**Setup**
+
+The experiments follow the same 200 images (100 cats and 100 dogs) through ImageNet-pretrained ResNet-18, ResNet-152, ConvNeXt-Tiny, ConvNeXt-Base, ViT-B/16 and Swin-T. Measurements are taken at block outputs and explicit architectural transitions, using fixed preprocessing and documented pooling rules.
+
+The main measurements are within-class and between-class cosine distances, their ratio **S**, adjacent linear **CKA**, and cosine-neighborhood **local label entropy (LLE)** at several neighborhood sizes. A held-out linear-boundary diagnostic examines high-LLE samples in ResNet-18. Attention-model animations show projected per-image geometry, with interpolated motion between measured observations.
+
+**Findings and interpretation**
+
+The supplied CNN result table shows higher final S than initial S in all four CNNs. This is relative class separation: within-class distances do not uniformly decrease. LLE tracks local label mixing rather than entropy of the activation vectors themselves. Trajectories can be nonmonotonic, and a CKA dip is a descriptive geometry change rather than proof of a phase transition.
+
+Checkpoint differences are explicit: ResNet-152 uses V2 weights in the CNN geometry experiment and V1 in the LLE experiment. Architecture, pooling and pretraining differences limit depth-only comparisons. The experiment documentation distinguishes executed notebook evidence from results that have not been independently rerun.
+
+**Code and reproducibility**
+
+The implementation is maintained on the [`representation-vector-geometric-dynamics` branch](https://github.com/Lawson-Dong/representation-alignment-/tree/representation-vector-geometric-dynamics):
+
+- [Experiment README and reproduction commands](https://github.com/Lawson-Dong/representation-alignment-/tree/representation-vector-geometric-dynamics/experiments/geometric_dynamics)
+- [Original notebooks](https://github.com/Lawson-Dong/representation-alignment-/tree/representation-vector-geometric-dynamics/experiments/geometric_dynamics/notebooks)
+- [Command-line scripts](https://github.com/Lawson-Dong/representation-alignment-/tree/representation-vector-geometric-dynamics/experiments/geometric_dynamics/scripts)
+- [CNN result tables and source hashes](https://github.com/Lawson-Dong/representation-alignment-/tree/representation-vector-geometric-dynamics/experiments/geometric_dynamics/results)
+- [Protocol and research audit](https://github.com/Lawson-Dong/representation-alignment-/tree/representation-vector-geometric-dynamics/experiments/geometric_dynamics/docs/protocol.md)
+
+The branch includes an MIT license, contribution guidance and GitHub Actions checks for metric definitions, Python syntax, source integrity and the supplied CNN CSV. These offline checks do not replace a full pretrained-model rerun.
+
+---
+
 ## Repository Structure
 
 ```text
@@ -81,9 +114,20 @@ representation-alignment-/
     └── representation_questions.md
 ```
 
-Experiment code and notebooks can be organized into dedicated subdirectories as they are added.
+The structure above describes the default branch. The geometric dynamics experiment lives under `experiments/geometric_dynamics/` on its [dedicated branch](https://github.com/Lawson-Dong/representation-alignment-/tree/representation-vector-geometric-dynamics), organized into `notebooks/`, `scripts/`, `results/`, `docs/` and `tests/`.
 
 ## Reproducibility
+
+For geometric dynamics, first check out the experiment branch and follow its experiment-specific instructions:
+
+```bash
+git clone https://github.com/Lawson-Dong/representation-alignment-.git
+cd representation-alignment-
+git switch representation-vector-geometric-dynamics
+pip install -r experiments/geometric_dynamics/requirements.txt
+```
+
+The [experiment README](https://github.com/Lawson-Dong/representation-alignment-/tree/representation-vector-geometric-dynamics/experiments/geometric_dynamics) documents dataset checksums, output directories, model execution and optional video generation.
 
 Install the base environment with:
 
@@ -102,6 +146,8 @@ Although these experiments study different models and questions, they share a co
 The ResNet experiment approached this question from the perspective of **model–brain correspondence**, asking whether different stages of artificial visual processing resemble different stages of biological visual processing.
 
 The CLIP experiment approached it from the perspective of **model-internal representation**, asking how multiple semantic concepts are organized and combined within a learned representation space.
+
+The geometric dynamics project studies how category structure changes across a forward pass, connecting global class separation with local neighborhood organization.
 
 Together, these projects reflect my early interest in studying neural networks not only through their outputs, but through the internal representations that give rise to those outputs.
 
