@@ -1,0 +1,61 @@
+# Representation-vector geometric dynamics
+
+Exploratory, frozen-network experiments on the same 100 cat and 100 dog images. The question is how class geometry and local label mixing change across successive block outputs. This is forward-pass geometry, not training-time dynamics or a test of alignment interventions.
+
+## Experiments
+
+| Entry point | Models / readouts | Observations | Checkpoints |
+|---|---|---|---|
+| `scripts/run_cnn_geometry.py` | ResNet-18, ResNet-152, ConvNeXt-Tiny, ConvNeXt-Base | 9, 51, 22, 40 | ResNet-152 V2; others V1 |
+| `scripts/run_lle.py` | Same four CNNs; cosine kNN local label entropy | 9, 51, 22, 40 | All V1 |
+| `scripts/run_attention_geometry.py` | ViT-B/16 CLS, ViT-B/16 patch mean, Swin-T | 13, 14, 17 | All V1 |
+
+Checkpoints are explicit torchvision ImageNet-1K enums. **ResNet-152 V1 LLE and V2 geometry are different checkpoint conditions.** Do not merge them as one representation trajectory.
+
+## Reproduce
+
+From the repository root, use Python 3.11 or 3.12:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r experiments/geometric_dynamics/requirements.txt
+export GEOMETRY_OUTPUT_DIR="$PWD/outputs/geometric_dynamics"
+python experiments/geometric_dynamics/scripts/run_cnn_geometry.py
+python experiments/geometric_dynamics/scripts/run_lle.py
+python experiments/geometric_dynamics/scripts/run_attention_geometry.py
+python experiments/geometric_dynamics/scripts/analyze_attention_geometry.py
+python experiments/geometric_dynamics/scripts/make_attention_video.py vit_b16_cls
+python experiments/geometric_dynamics/scripts/make_attention_video.py vit_b16_patchmean
+python experiments/geometric_dynamics/scripts/make_attention_video.py swin_t
+```
+
+Install an appropriate matching torch/torchvision build for your CPU or CUDA environment. GPU is recommended; CPU is supported but slow for the largest models. Downloads require internet. MP4 generation additionally requires `ffmpeg` with libx264 on PATH. Scripts save outputs in the selected directory (default: `outputs` relative to the invocation directory). CNN scripts export all four per-image NPZ files; the attention analysis checks matching sample paths and labels across its three readouts, without requiring a prior CNN run. Attention extraction additionally checks a ResNet-18 reference if present.
+
+The three `notebooks/` files are byte-for-byte historical uploads, including existing outputs and Colab download cells. For local/headless runs use `scripts/`. See [protocol and audit](docs/protocol.md) for execution evidence, corrected stale notebook text, and interpretation limits.
+
+## Measurements
+
+- **S:** mean between-class cosine distance / balanced mean within-class cosine distance. Normalize each image vector; exclude self-pairs within classes. Inspect numerator and denominator separately: higher S need not mean absolute contraction.
+- **Adjacent linear CKA:** Frobenius inner product of normalized centered raw sample Gram matrices. Feature widths can differ.
+- **LLE:** local **label** entropy in bits, not locally linear embedding. Exclude the query from its cosine neighbors; stable sorting breaks ties by sample order. Use k = 4, 8, 16, 32, 64. Compare with 100 shuffled-label baselines; cross-model runs share permutations.
+- **Boundary diagnostic:** ResNet-18 only; five-fold held-out logistic hyperplanes after normalization and fold-fitted standardization. High entropy is H >= 0.8; near-boundary means the lowest quartile of absolute margins. k sensitivity includes exploratory hypergeometric enrichment tests.
+- **Auxiliary historical readouts:** raw Fisher ratio, unit-vector Euclidean distances, participation ratio (PR), and CNN linear probes. PR is an effective-dimension estimator. These are retained to reproduce the supplied experiments, while the main research focus is geometry and LLE.
+
+Animations use one PCA of same-image cosine fingerprints across all observations within a video. Endpoints are measured vectors; intermediate motion is interpolated. The two smallest adjacent CKA values receive more screen time. Video axes from separate PCA fits are not directly comparable.
+
+## Included results and validation
+
+`results/block_geometry_metrics.csv` is the supplied 122-row CNN export, preserved exactly. Its original filename and SHA-256 appear in `results/source_manifest.json`. LLE result tables/plots remain available in executed notebook outputs; separate LLE CSVs, activations, attention metrics CSVs and videos were not supplied. The attention notebook reports a prior local run, but its code cells have no execution outputs; those numerical claims are not independently verified by this upload.
+
+```bash
+python -m unittest discover -s experiments/geometric_dynamics/tests -v
+```
+
+Offline checks cover formulas against explicit pairwise distances, CKA invariance and changing feature width, notebook Python syntax, historical source hashes and CNN CSV integrity. CI repeats these checks without downloading datasets or model weights. A complete pretrained rerun is a separate, resource-intensive verification step.
+
+Dataset: [Zenodo record 5226945](https://zenodo.org/records/5226945); MD5 `5e014163374c3bf7069c923de2d619c8`. The archive and pretrained weights are not redistributed. See the source record/providers for their terms.
+
+## License
+
+Repository code is released under the [MIT License](../../LICENSE). External datasets, pretrained checkpoints and referenced publications retain their own terms.

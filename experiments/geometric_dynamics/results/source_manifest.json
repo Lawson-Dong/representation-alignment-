@@ -1,0 +1,18 @@
+{
+  "Cat_Dog_Block_Geometry_Dynamics_ResNet_ConvNeXt.ipynb": {
+    "sha256": "e017776405aa36c93ca8cd0b357d64351d70605a910b8f08e1f5f440537bbbcc",
+    "bytes": 1031223
+  },
+  "Attention_Model_Geometry_Matched_Images(1).ipynb": {
+    "sha256": "33c92f09e3bfb035a9952c5804be3c7e06905276699543a187ed61fd8e76085d",
+    "bytes": 25798
+  },
+  "Cat_Dog_LLE_Matched_Samples_resnet_convnext.ipynb": {
+    "sha256": "61a7678a142bc6b8c2c1605f72683792e0542862eec07bd2e917da7a943ec6fe",
+    "bytes": 973096
+  },
+  "block_geometry_metrics(3).csv": {
+    "sha256": "5c92ccd9965a57f5b4df79f4f345c190c0244e05561bbd00323b0c0329a68cb3",
+    "bytes": 28479
+  }
+}
