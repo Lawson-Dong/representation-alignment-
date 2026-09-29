@@ -4,6 +4,10 @@ This repository collects a series of self-directed experiments exploring the nat
 
 These projects were developed during my late high school and early undergraduate years, driven by my interest in understanding what neural networks learn internally, how information is represented, and how artificial representations relate to human cognition.
 
+## Representation-vector geometric dynamics
+
+The `representation-vector-geometric-dynamics` branch now includes [reproducible cat/dog experiments](experiments/geometric_dynamics/README.md) across ResNet, ConvNeXt, ViT and Swin: blockwise geometry, cosine local label entropy, held-out boundary diagnostics and attention animations. Original notebooks and the supplied CNN result table are preserved with source hashes. See the experiment README for methods, checkpoint differences, commands and limitations.
+
 ## Research Themes
 
 The repository currently focuses on two related directions:
@@ -74,6 +78,8 @@ This experiment motivated a broader question that continues to interest me:
 representation-alignment-/
 ├── README.md
 ├── requirements.txt
+├── experiments/
+│   └── geometric_dynamics/
 ├── .gitignore
 ├── data/
 │   └── README.md
@@ -81,7 +87,7 @@ representation-alignment-/
     └── representation_questions.md
 ```
 
-Experiment code and notebooks can be organized into dedicated subdirectories as they are added.
+The geometric dynamics experiments contain notebooks, scripts, small result tables, protocol documentation and offline checks.
 
 ## Reproducibility
 

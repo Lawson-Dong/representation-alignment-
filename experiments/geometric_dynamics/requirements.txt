@@ -1,0 +1,13 @@
+# Compatible ranges; original CNN notebook reported torch 2.11 / torchvision 0.26.
+# Select a matched CPU/CUDA torch + torchvision pair for your machine.
+numpy>=1.26,<3
+scipy>=1.11,<2
+pandas>=2.1,<4
+matplotlib>=3.8,<4
+scikit-learn>=1.4,<2
+torch>=2.2,<3
+torchvision>=0.17,<1
+Pillow>=10,<13
+ipython>=8,<10
+tqdm>=4.66,<5
+jupyter>=1,<2

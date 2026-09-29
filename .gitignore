@@ -38,3 +38,12 @@ results/
 # Caches
 .cache/
 __pycache__/
+
+# Geometric dynamics runtime outputs
+outputs/
+model_cache/
+vision_deps/
+lle_cross_model/
+*.npz
+*.mp4
+*.zip
