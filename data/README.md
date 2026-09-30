@@ -1,21 +1,17 @@
 # Data
 
-This repository studies neural representations using external datasets and generated intermediate representations.
+The geometric dynamics experiments use external images and pretrained model weights, and generate intermediate representations during execution.
 
 Large datasets, extracted activations, representational dissimilarity matrices, model checkpoints, and generated result archives should generally not be committed directly to Git.
 
-## Project-specific data
+## Cat/dog geometric dynamics
 
-### ResNet and Human Visual Cortex
+[Zenodo record 5226945](https://zenodo.org/records/5226945), archive `cats_dogs_light.zip`, MD5 `5e014163374c3bf7069c923de2d619c8`. Scripts download and verify it automatically, then select 100 cats and 100 dogs using seed 42 in a shared order. Do not sort archive paths before sampling, as this changes the selected cohort.
 
-The experiment described in the root README uses the 92-image dataset from the Algonauts 2019 benchmark together with biological visual-representation data for EVC and IT.
+Dataset images and model weights are not redistributed. See the [protocol](../experiments/geometric_dynamics/docs/protocol.md) for cohort selection, preprocessing and pooling, and the [experiment README](../experiments/geometric_dynamics/README.md) for output files and execution commands.
 
-### CLIP and Semantic Composition
+The preserved CNN metrics table is in `experiments/geometric_dynamics/results/`; supplied videos are in [visualization](../visualization/). Generated per-image activation archives remain outside Git.
 
-The semantic-composition experiment uses constructed hybrid visual stimuli and model embeddings generated from those stimuli.
+## Other research directions
 
-When experiment code is added, this directory should document the exact expected file names, directory layout, preprocessing steps, and acquisition instructions needed for reproducibility.
-
-### Cat/dog geometric dynamics
-
-[Zenodo record 5226945](https://zenodo.org/records/5226945), archive `cats_dogs_light.zip`, MD5 `5e014163374c3bf7069c923de2d619c8`. Scripts download and verify it automatically, then select 100 cats and 100 dogs in a seeded, shared order. Dataset images and model weights are not redistributed. See [protocol](../experiments/geometric_dynamics/docs/protocol.md).
+The [RSA](https://github.com/Lawson-Dong/representation-alignment-/tree/resnet-human-visual-cortex-rsa) and [CLIP semantic composition](https://github.com/Lawson-Dong/representation-alignment-/tree/clip-semantic-composition) experiments have separate branches. The [main-branch data overview](https://github.com/Lawson-Dong/representation-alignment-/blob/main/data/README.md) describes the repository's three data contexts.
