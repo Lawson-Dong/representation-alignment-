@@ -201,7 +201,7 @@ def main():
     (CROSS_DIR/'sample_manifest.json').write_text(json.dumps(manifest,indent=2))
     # Fixed ResNet-18 transform is intentionally used for all models for controlled comparison.
     # Weight enums are explicit: no moving DEFAULT alias.
-    CONFIGS=[('resnet152',models.resnet152,models.ResNet152_Weights.IMAGENET1K_V1),
+    CONFIGS=[('resnet152',models.resnet152,models.ResNet152_Weights.IMAGENET1K_V2),
              ('convnext_tiny',models.convnext_tiny,models.ConvNeXt_Tiny_Weights.IMAGENET1K_V1),
              ('convnext_base',models.convnext_base,models.ConvNeXt_Base_Weights.IMAGENET1K_V1)]
     # Use the same shuffled assignments at every layer/model/k.

@@ -29,7 +29,7 @@ The experiments follow the same **100 cat and 100 dog images** through pretraine
 
 Observation counts follow the extraction protocol and are not counts of every computational layer. ViT CLS and patch-mean representations are analyzed as separate readouts.
 
-**Checkpoint distinction:** ResNet-152 geometry uses torchvision V2 weights, while its local label entropy experiment uses V1. These conditions must be interpreted separately. Other listed experiments use V1 weights.
+**Checkpoint alignment:** ResNet-152 geometry and the completed local label entropy rerun both use explicit torchvision ImageNet-1K V2 weights. Other listed experiments retain V1 weights. Shared ResNet-18 V1 preprocessing is unchanged.
 
 ## Main Measurements
 

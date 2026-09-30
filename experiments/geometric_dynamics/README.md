@@ -7,10 +7,10 @@ Exploratory, frozen-network experiments on the same 100 cat and 100 dog images. 
 | Entry point | Models / readouts | Observations | Checkpoints |
 |---|---|---|---|
 | `scripts/run_cnn_geometry.py` | ResNet-18, ResNet-152, ConvNeXt-Tiny, ConvNeXt-Base | 9, 51, 22, 40 | ResNet-152 V2; others V1 |
-| `scripts/run_lle.py` | Same four CNNs; cosine kNN local label entropy | 9, 51, 22, 40 | All V1 |
+| `scripts/run_lle.py` | Same four CNNs; cosine kNN local label entropy | 9, 51, 22, 40 | ResNet-152 V2; others V1 |
 | `scripts/run_attention_geometry.py` | ViT-B/16 CLS, ViT-B/16 patch mean, Swin-T | 13, 14, 17 | All V1 |
 
-Checkpoints are explicit torchvision ImageNet-1K enums. **ResNet-152 V1 LLE and V2 geometry are different checkpoint conditions.** Do not merge them as one representation trajectory.
+Checkpoints are explicit torchvision ImageNet-1K enums. **ResNet-152 LLE and geometry now both use V2 weights.** The completed Colab V2 rerun replaces the previous V1 LLE notebook; other model configurations are unchanged.
 
 ## Reproduce
 
@@ -32,7 +32,7 @@ python experiments/geometric_dynamics/scripts/make_attention_video.py swin_t
 
 Install an appropriate matching torch/torchvision build for your CPU or CUDA environment. GPU is recommended; CPU is supported but slow for the largest models. Downloads require internet. MP4 generation additionally requires `ffmpeg` with libx264 on PATH. Scripts save outputs in the selected directory (default: `outputs` relative to the invocation directory). CNN scripts export all four per-image NPZ files; the attention analysis checks matching sample paths and labels across its three readouts, without requiring a prior CNN run. Attention extraction additionally checks a ResNet-18 reference if present.
 
-The three `notebooks/` files are byte-for-byte historical uploads, including existing outputs and Colab download cells. For local/headless runs use `scripts/`. See [protocol and audit](docs/protocol.md) for execution evidence, corrected stale notebook text, and interpretation limits.
+The geometry and attention `notebooks/` files remain historical uploads. The LLE notebook has been replaced in place with the completed Colab ResNet-152 V2 rerun; only its execution-status markdown was updated after upload, preserving every code cell and output. The source manifest records the current notebook hashes. For local/headless runs use `scripts/`. See [protocol and audit](docs/protocol.md) for execution evidence, corrected stale notebook text, and interpretation limits.
 
 ## Measurements
 
