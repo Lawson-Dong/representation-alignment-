@@ -1,120 +1,93 @@
-# Representation Alignment
+# Representation Vector Dynamics
 
-This repository collects a series of self-directed experiments exploring the nature and properties of neural representations at the intersection of artificial intelligence and cognitive science.
+Exploratory experiments on how representation-vector geometry changes as the same images propagate through successive layers and blocks of pretrained visual networks.
 
-These projects were developed during my late high school and early undergraduate years, driven by my interest in understanding what neural networks learn internally, how information is represented, and how artificial representations relate to human cognition.
+The central question is:
 
-## Representation-vector geometric dynamics
+> How do class structure, local label mixing, and representational geometry evolve across network depth?
 
-The `representation-vector-geometric-dynamics` branch now includes [reproducible cat/dog experiments](experiments/geometric_dynamics/README.md) across ResNet, ConvNeXt, ViT and Swin: blockwise geometry, cosine local label entropy, held-out boundary diagnostics and attention animations. Original notebooks and the supplied CNN result table are preserved with source hashes. See the experiment README for methods, checkpoint differences, commands and limitations.
+This branch focuses on **layerwise forward-pass dynamics in frozen networks**. Depth is the progression variable; these experiments do not track changes during training.
 
-## Research Themes
+## Research Questions
 
-The repository currently focuses on two related directions:
+- Do representations become more separated by class as depth increases?
+- Does increased class separation reflect within-class contraction, between-class expansion, or both?
+- Does geometry change gradually, or are there blocks with unusually large transformations?
+- How does local label entropy evolve, and where are high-entropy samples located?
+- Which patterns recur across architectures, depths, and representation readouts?
 
-1. **Model–brain correspondence** — comparing the geometry of artificial visual representations with biological visual representations.
-2. **Semantic composition** — studying how multiple concepts are combined inside a learned embedding space.
+## Experimental Setup
 
-A short conceptual overview is available in [`theory/representation_questions.md`](theory/representation_questions.md).
+The experiments follow the same **100 cat and 100 dog images** through pretrained ImageNet-1K models. Each observation provides one representation vector per image.
 
-## Projects
+| Architecture | Models / readouts | Observations per trajectory |
+|---|---|---|
+| ResNet | ResNet-18; ResNet-152 | 9; 51 |
+| ConvNeXt | ConvNeXt-Tiny; ConvNeXt-Base | 22; 40 |
+| Vision Transformer | ViT-B/16 CLS token; patch-token mean | 13; 14 |
+| Swin Transformer | Swin-T | 17 |
 
-### 1. ResNet and Human Visual Cortex
+Observation counts follow the extraction protocol and are not counts of every computational layer. ViT CLS and patch-mean representations are analyzed as separate readouts.
 
-**Motivation**
+**Checkpoint distinction:** ResNet-152 geometry uses torchvision V2 weights, while its local label entropy experiment uses V1. These conditions must be interpreted separately. Other listed experiments use V1 weights.
 
-Deep neural networks and the human visual system both appear to process visual information hierarchically. I was interested in whether the internal representations of a neural network across distinct layers would show different degrees of correspondence with different levels of the human visual hierarchy.
+## Main Measurements
 
-**Setup**
+### Class Geometry
 
-I used the 92-image dataset from the **Algonauts 2019 benchmark** and applied **Representational Similarity Analysis (RSA)** to compare representations from different layers of ResNet-18, ResNet-50, and ResNet-152 with two regions of the human visual cortex:
+For unit-normalized representation vectors, measure mean cosine distances within each class and between classes. Define:
 
-- **EVC (Early Visual Cortex)**
-- **IT (Inferotemporal Cortex)**
+$$
+S = \frac{d_{\mathrm{between}}}{d_{\mathrm{within}}}
+$$
 
-The analysis examines how the representational geometry of the network changes across layers and how it corresponds to the representational geometry of these brain regions.
+The denominator is the balanced mean of the two within-class distances, excluding self-pairs.
 
-**Conclusion**
+A larger **S** indicates greater between-class distance relative to within-class distance. It does **not** establish absolute within-class contraction: both distances must be inspected separately.
 
-Across the ResNet architectures, the correspondence between model representations and human visual representations was layer-dependent.
+### Geometry Across Adjacent Blocks
 
-In general, shallower network representations showed stronger correspondence with **EVC**, while deeper representations showed stronger correspondence with **IT**. This pattern is consistent with the idea that the hierarchical organization of visual representations in deep neural networks can partially correspond to the hierarchical organization of the human visual system.
+**Adjacent linear CKA** compares centered sample Gram matrices at consecutive observations, including observations with different feature widths. Lower similarity marks a larger change in sample geometry under this measure.
 
-The result does not imply that the networks implement the same computations as the brain. Rather, it provides evidence that different stages of a neural network can exhibit different forms of representational correspondence with different stages of biological visual processing.
+These transitions identify candidate abrupt changes for closer inspection; they do not by themselves establish a physical phase transition.
 
----
+### Local Label Entropy
 
-### 2. CLIP and Semantic Composition
+**LLE means local label entropy**, measured in bits over cosine nearest neighbors, excluding the query image:
 
-**Motivation**
+$$
+H_k(i) = -\sum_{c \in \{\mathrm{cat},\mathrm{dog}\}} p_c(i;k)\log_2 p_c(i;k)
+$$
 
-The first project led me to a more fundamental question: if neural networks develop structured internal representations, how are multiple concepts represented when they appear together?
+Low entropy indicates a locally label-consistent neighborhood; high entropy indicates class mixing. The analysis uses **k = 4, 8, 16, 32, 64** and compares against shuffled-label baselines.
 
-I became particularly interested in whether a neural network's representation of a novel or semantically conflicting concept could be understood in terms of the representations of its constituent concepts.
+A ResNet-18 boundary diagnostic examines whether high-entropy samples are enriched near five-fold held-out logistic decision boundaries. This diagnostic is distinct from the cross-model entropy measurements.
 
-**Setup**
+## Visualizations
 
-I constructed hybrid visual stimuli combining different semantic components, such as a **dog body with a cat head**, and examined how these stimuli were represented in **CLIP's embedding space**.
+The [visualization directory](visualization/) is the destination for representation-dynamics videos.
 
-I compared the representation of the hybrid concept with the representations of its component concepts and investigated whether the hybrid representation could be explained as a combination of these components.
+The documented animation method projects same-image cosine fingerprints using one shared PCA fit across the observations in each video. Measured observations form the endpoints; motion between them is interpolated. Transitions with the two lowest adjacent CKA values receive more screen time.
 
-I then explored an **adaptive linear-combination model** in which the contribution of each semantic component changes according to the visual composition of the stimulus.
+Animations help inspect trajectories, but interpretation should rely on the original-space metrics. Axes from independently fitted videos are not directly comparable.
 
-**Conclusion**
+## Reproduce and Explore
 
-The experiments suggested that the representation of a hybrid concept could be substantially explained through combinations of the representations of its constituent concepts.
+See the [experiment README](experiments/geometric_dynamics/README.md) for installation, execution commands, checkpoint details, and validation.
 
-Rather than behaving as an entirely independent representation, the hybrid representation appeared to occupy a position in the embedding space that reflected the composition of its underlying semantic components. Allowing the contribution of each component to vary with the visual composition provided a more flexible description of this relationship.
+- [Scripts](experiments/geometric_dynamics/scripts/): reproducible extraction, analysis, and attention-video generation.
+- [Notebooks](experiments/geometric_dynamics/notebooks/): historical exploratory experiments and existing outputs.
+- [CNN geometry results](experiments/geometric_dynamics/results/block_geometry_metrics.csv): the preserved 122-row export.
+- [Protocol and audit](experiments/geometric_dynamics/docs/protocol.md): methods, source provenance, and interpretation limits.
 
-This experiment motivated a broader question that continues to interest me:
+## Interpretation
 
-> **How are multiple concepts combined and transformed within the representation space of a neural network?**
+The research focus is **relative class organization and geometric transformation across depth**, rather than an assumption that all vectors contract monotonically.
 
----
+Decreasing local label entropy can indicate increasing class organization. Calling this “self-organization” remains an interpretation: frozen pretrained networks implement transformations learned during training, and these measurements alone do not establish a general mechanism or universal law.
 
-## Repository Structure
+The evidence is exploratory and limited to the sampled images, checkpoints, architectures, and readouts. Historical notebook outputs and the supplied CNN table should be distinguished from independently reproduced results.
 
-```text
-representation-alignment-/
-├── README.md
-├── requirements.txt
-├── experiments/
-│   └── geometric_dynamics/
-├── .gitignore
-├── data/
-│   └── README.md
-└── theory/
-    └── representation_questions.md
-```
+## License
 
-The geometric dynamics experiments contain notebooks, scripts, small result tables, protocol documentation and offline checks.
-
-## Reproducibility
-
-Install the base environment with:
-
-```bash
-pip install -r requirements.txt
-```
-
-Large datasets, extracted activations, model checkpoints, and generated analysis artifacts should not be committed directly to the repository. Dataset-specific instructions and expected file layouts should be documented in [`data/README.md`](data/README.md) and in the corresponding experiment directory.
-
-## Research Motivation
-
-Although these experiments study different models and questions, they share a common theme:
-
-> **What structure exists inside neural representations, and what can that structure tell us about intelligence and cognition?**
-
-The ResNet experiment approached this question from the perspective of **model–brain correspondence**, asking whether different stages of artificial visual processing resemble different stages of biological visual processing.
-
-The CLIP experiment approached it from the perspective of **model-internal representation**, asking how multiple semantic concepts are organized and combined within a learned representation space.
-
-Together, these projects reflect my early interest in studying neural networks not only through their outputs, but through the internal representations that give rise to those outputs.
-
-## Research Process
-
-These projects were independently developed out of personal interest during my late high school and early undergraduate years. I learned the relevant concepts largely through reading papers, discussing ideas, formulating research questions, writing and debugging code, and iteratively designing and analyzing experiments by discussing my questions and understandings hundreds of hours with AI.
-
-At the time, I did not have formal training in research methodology, cognitive neuroscience, or representation learning. As a result, these projects were exploratory, and some of the questions and interpretations evolved substantially during the process.
-
-I keep them here as an early record of my attempt to understand neural representations through computational experiments.
+Repository code is released under the [MIT License](LICENSE). External datasets and pretrained checkpoints retain their own terms.
