@@ -41,17 +41,17 @@ Project branch: [Representation vector geometric dynamics](https://github.com/La
 | Aspect | Measurements | Question addressed |
 |---|---|---|
 | Angular class geometry | Within-class and between-class cosine distances | Are same-class vectors less dispersed, and are different classes farther apart? |
-| Relative separation | \(S=d_{\mathrm{between}}/d_{\mathrm{within}}\); adjacent \(\Delta S\) | How does class separation change relative to within-class dispersion? |
+| Relative separation | $S=d_{\mathrm{between}}/d_{\mathrm{within}}$; adjacent $\Delta S$ | How does class separation change relative to within-class dispersion? |
 | Unit-vector distance geometry | Within-class and between-class Euclidean distances | How does pairwise distance evolve after normalization? |
 | Raw-vector class geometry | Fisher ratio; adjacent changes in Fisher ratio | How does class-centroid separation compare with within-class scatter? |
 | Vector scale | Mean raw-vector norm | How does representation magnitude change before normalization? |
 | Adjacent representational similarity | Linear CKA between consecutive observations | Where does sample geometry change most strongly? |
 | Local label mixing | Per-image and mean local label entropy; high-entropy fraction | How mixed are labels within cosine nearest-neighbor neighborhoods? |
-| Local order relative to chance | Shuffled-label entropy baseline; \(1-\overline H/\overline H_{\mathrm{shuffle}}\) | Is local label organization stronger than under random label assignments? |
+| Local order relative to chance | Shuffled-label entropy baseline; $1-\overline H/\overline H_{\mathrm{shuffle}}$ | Is local label organization stronger than under random label assignments? |
 | Entropy trajectory | Endpoint entropy decrease; number of entropy-increasing transitions; comparisons across k | Is increasing local organization consistent across depth and neighborhood scales? |
 | Boundary association | Absolute held-out margins, margin percentiles, entropy–margin Spearman correlation, proximity AUC, near/far high-entropy rates, median margins by entropy group | Does high local mixing coincide with proximity to a fitted category boundary? |
 | Boundary enrichment and errors | Fraction of high-entropy samples near the boundary, exploratory hypergeometric enrichment tests, misclassification among high-entropy samples | Are high-entropy neighborhoods boundary-associated or related to classification errors? |
-| Effective dimension | Participation ratio (PR); adjacent \(\Delta\mathrm{PR}\) | How many variance directions contribute substantially to the representation cloud? |
+| Effective dimension | Participation ratio (PR); adjacent $\Delta\mathrm{PR}$ | How many variance directions contribute substantially to the representation cloud? |
 | Linear decodability | Held-out linear-probe accuracy, split standard deviation, adjacent accuracy changes | How accessible are category labels to a linear readout? |
 
 These measurements are complementary, but not all are independent. For unit vectors, squared Euclidean distance equals twice cosine distance. Availability also differs by experiment: the full framework should not be read as a claim that every measurement has been evaluated for every model.
@@ -72,7 +72,7 @@ $$
 H_k(i)=-\sum_{c\in\{\mathrm{cat},\mathrm{dog}\}}p_c(i;k)\log_2 p_c(i;k)
 $$
 
-Here \(p_c(i;k)\) is the class fraction among the k cosine nearest neighbors, excluding the query sample, and \(0\log_2 0=0\). LLE denotes **local label entropy**, not locally linear embedding. The experiments use k = 4, 8, 16, 32, 64 and 100 shuffled-label baselines. This is entropy of neighborhood labels, not thermodynamic entropy or the full information content of a representation.
+Here $p_c(i;k)$ is the class fraction among the k cosine nearest neighbors, excluding the query sample, and $0\log_2 0=0$. LLE denotes **local label entropy**, not locally linear embedding. The experiments use k = 4, 8, 16, 32, 64 and 100 shuffled-label baselines. This is entropy of neighborhood labels, not thermodynamic entropy or the full information content of a representation.
 
 **Participation ratio**
 
