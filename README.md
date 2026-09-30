@@ -18,6 +18,8 @@ A short conceptual overview is available in [`theory/representation_questions.md
 
 ### 1. ResNet and Human Visual Cortex
 
+[Project branch](https://github.com/Lawson-Dong/representation-alignment-/tree/resnet-human-visual-cortex-rsa)
+
 **Motivation**
 
 Deep neural networks and the human visual system both appear to process visual information hierarchically. I was interested in whether the internal representations of a neural network across distinct layers would show different degrees of correspondence with different levels of the human visual hierarchy.
@@ -42,6 +44,8 @@ The result does not imply that the networks implement the same computations as t
 ---
 
 ### 2. CLIP and Semantic Composition
+
+[Project branch](https://github.com/Lawson-Dong/representation-alignment-/tree/clip-semantic-composition)
 
 **Motivation**
 
@@ -79,7 +83,9 @@ How does the geometry of image representations change as the same inputs propaga
 
 The experiments follow the same 200 images (100 cats and 100 dogs) through ImageNet-pretrained ResNet-18, ResNet-152, ConvNeXt-Tiny, ConvNeXt-Base, ViT-B/16 and Swin-T. Measurements are taken at block outputs and explicit architectural transitions, using fixed preprocessing and documented pooling rules.
 
-The main measurements are within-class and between-class cosine distances, their ratio **S**, adjacent linear **CKA**, and cosine-neighborhood **local label entropy (LLE)** at several neighborhood sizes. A held-out linear-boundary diagnostic examines high-LLE samples in ResNet-18. Attention-model animations show projected per-image geometry, with interpolated motion between measured observations.
+The measurements cover within-class and between-class cosine and unit-vector Euclidean distances, relative separation **S**, raw-vector **Fisher ratio**, mean raw-vector norm, adjacent linear **CKA**, **participation ratio (PR)** as an effective-dimension estimate, and held-out **linear-probe accuracy**. Adjacent changes in S, Fisher ratio, PR and probe accuracy describe the CNN transitions. The CNN LLE experiments additionally measure cosine-neighborhood **local label entropy**, local order relative to shuffled labels, high-entropy fractions and entropy trajectory summaries across neighborhood sizes. A held-out linear-boundary diagnostic examines high-LLE samples in ResNet-18 using margins, correlations, AUC and enrichment checks. Measurement availability differs by model and pipeline; see the [full definitions](https://github.com/Lawson-Dong/representation-alignment-/blob/representation-vector-geometric-dynamics/README.md#main-measurements).
+
+Seven [representation-dynamics videos](https://github.com/Lawson-Dong/representation-alignment-/tree/representation-vector-geometric-dynamics/visualization) cover ResNet-18, ResNet-152, ConvNeXt-Tiny, ConvNeXt-Base, ViT-B/16 CLS, ViT-B/16 patch mean and Swin-T. Motion between measured observations is interpolated.
 
 **Findings and interpretation**
 
@@ -114,7 +120,7 @@ representation-alignment-/
     └── representation_questions.md
 ```
 
-The structure above describes the default branch. The geometric dynamics experiment lives under `experiments/geometric_dynamics/` on its [dedicated branch](https://github.com/Lawson-Dong/representation-alignment-/tree/representation-vector-geometric-dynamics), organized into `notebooks/`, `scripts/`, `results/`, `docs/` and `tests/`.
+The structure above describes the default branch. The geometric dynamics experiment lives under `experiments/geometric_dynamics/` on its [dedicated branch](https://github.com/Lawson-Dong/representation-alignment-/tree/representation-vector-geometric-dynamics), organized into `notebooks/`, `scripts/`, `results/`, `docs/` and `tests/`, with videos in the branch-root `visualization/` directory.
 
 ## Reproducibility
 
