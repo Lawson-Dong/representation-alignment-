@@ -120,7 +120,39 @@ The ResNet-18 diagnostic examines whether high-entropy samples are concentrated 
 
 High entropy uses \(H\geq0.8\); “near boundary” uses the lowest quartile of absolute margins. These are operational thresholds. Margin magnitudes from different fold-standardized spaces are not a common original-space distance. The enrichment tests are exploratory and should be interpreted alongside k sensitivity.
 
-**Scope:** PR (effective dimension) and standalone linear-probe accuracy remain in historical code for reproducibility, but are not core measurements for this research direction. Logistic probes are used here specifically to define held-out boundaries for the entropy diagnostic.
+### Effective Dimension: Participation Ratio (PR)
+
+PR measures how broadly variance is distributed across representation directions. In the CNN geometry pipeline, unit-normalized vectors are centered across samples, and \(\lambda_j\) are the eigenvalues of their sample Gram matrix:
+
+$
+\mathrm{PR}_\ell =
+\frac{\left(\sum_j \lambda_j\right)^2}{\sum_j \lambda_j^2}
+$
+
+| Measurement | Code field | Interpretation |
+|---|---|---|
+| Participation ratio | `PR` | Effective dimension of the centered unit-vector cloud. |
+| Adjacent change in PR | `delta_PR` | \(\mathrm{PR}_\ell-\mathrm{PR}_{\ell-1}\); calculated in the CNN transition analysis. |
+
+Lower PR indicates variance concentrated in fewer directions; higher PR indicates a more distributed variance spectrum. PR is a spectral effective-dimension estimator, not a direct estimate of manifold intrinsic dimension. A decrease in PR does not by itself establish class separation or reduced pairwise distances.
+
+### Linear-Probe Accuracy
+
+The CNN geometry pipeline evaluates how linearly decodable the cat/dog labels are at each observation. A logistic-regression probe is fitted to frozen representations after per-image unit normalization and training-split feature standardization.
+
+The evaluation uses **five stratified shuffle splits**, each with **70% training and 30% held-out test images**, with seed 42. The same splits are used across observations and CNN models.
+
+| Measurement | Code field | Interpretation |
+|---|---|---|
+| Mean held-out probe accuracy | `probe_mean` | Mean classification accuracy over the five held-out splits. |
+| Probe accuracy standard deviation | `probe_sd` | Sample standard deviation across splits; describes split variability, not a confidence interval. |
+| Adjacent change in probe accuracy | `delta_probe_mean` | Difference in mean accuracy between consecutive observations; calculated in the CNN transition analysis. |
+
+The probe uses logistic regression with C = 1. Normalization, feature standardization, and fitting are performed within each training split. Higher accuracy indicates better linear label decodability under this protocol, rather than a complete measure of representation quality.
+
+This accuracy experiment uses stratified shuffle splits and is separate from the **five-fold out-of-fold boundary diagnostic** above. The boundary analysis additionally records held-out correctness and accuracy (`oof_accuracy`) to help interpret entropy and margins.
+
+PR and probe accuracy complement the distance, CKA, and entropy measurements. Together they describe effective dimension, label decodability, class geometry, local mixing, and transformations across depth.
 
 ## Visualizations
 
