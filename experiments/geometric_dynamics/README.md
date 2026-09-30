@@ -40,13 +40,19 @@ The three `notebooks/` files are byte-for-byte historical uploads, including exi
 - **Adjacent linear CKA:** Frobenius inner product of normalized centered raw sample Gram matrices. Feature widths can differ.
 - **LLE:** local **label** entropy in bits, not locally linear embedding. Exclude the query from its cosine neighbors; stable sorting breaks ties by sample order. Use k = 4, 8, 16, 32, 64. Compare with 100 shuffled-label baselines; cross-model runs share permutations.
 - **Boundary diagnostic:** ResNet-18 only; five-fold held-out logistic hyperplanes after normalization and fold-fitted standardization. High entropy is H >= 0.8; near-boundary means the lowest quartile of absolute margins. k sensitivity includes exploratory hypergeometric enrichment tests.
-- **Auxiliary historical readouts:** raw Fisher ratio, unit-vector Euclidean distances, participation ratio (PR), and CNN linear probes. PR is an effective-dimension estimator. These are retained to reproduce the supplied experiments, while the main research focus is geometry and LLE.
+- **Distance and scale measurements:** within- and between-class cosine distances, unit-vector Euclidean distances, raw Fisher ratio and mean raw-vector norm. Unit-vector Euclidean and cosine distances describe related pairwise geometry, not independent evidence.
+- **PR:** participation ratio of the centered unit-vector sample Gram spectrum; a spectral effective-dimension estimate. Both CNN and attention geometry analyses compute PR.
+- **Linear-probe accuracy:** CNNs only; logistic regression after unit normalization and training-split standardization, evaluated on five paired stratified 70/30 shuffle splits. Report mean accuracy and sample standard deviation. This differs from the five-fold boundary diagnostic.
+- **Transition measurements:** adjacent changes in S, Fisher ratio, PR and probe accuracy, computed in CNN transition analysis.
+- **Entropy-derived measurements:** relative order against shuffled-label entropy, high-entropy fraction, endpoint entropy decrease and number of entropy-increasing transitions. Boundary analysis includes absolute margins, entropy–margin Spearman correlation, proximity AUC, near/far high-entropy rates, median margins, enrichment checks and high-entropy misclassification.
+
+See the [full metric definitions](../../README.md#main-measurements). Attention analysis computes cosine distances, S, CKA, Fisher ratio and PR; LLE and linear probes are implemented for the CNN experiments, not the attention readouts.
 
 Animations use one PCA of same-image cosine fingerprints across all observations within a video. Endpoints are measured vectors; intermediate motion is interpolated. The two smallest adjacent CKA values receive more screen time. Video axes from separate PCA fits are not directly comparable.
 
 ## Included results and validation
 
-`results/block_geometry_metrics.csv` is the supplied 122-row CNN export, preserved exactly. Its original filename and SHA-256 appear in `results/source_manifest.json`. LLE result tables/plots remain available in executed notebook outputs; separate LLE CSVs, activations, attention metrics CSVs and videos were not supplied. The attention notebook reports a prior local run, but its code cells have no execution outputs; those numerical claims are not independently verified by this upload.
+`results/block_geometry_metrics.csv` is the supplied 122-row CNN export, preserved exactly. Its original filename and SHA-256 appear in `results/source_manifest.json`. LLE result tables/plots remain available in executed notebook outputs; separate LLE CSVs, activations and attention metrics CSVs are not included. Seven supplied MP4 videos are now available in the branch-root [visualization directory](../../visualization/), covering four CNNs and three attention readouts. Their presence does not constitute an independent model rerun. The attention notebook reports a prior local run, but its code cells have no execution outputs; those numerical claims are not independently verified by this upload.
 
 ```bash
 python -m unittest discover -s experiments/geometric_dynamics/tests -v
