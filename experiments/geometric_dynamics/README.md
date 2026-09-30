@@ -52,7 +52,7 @@ Animations use one PCA of same-image cosine fingerprints across all observations
 
 ## Included results and validation
 
-`results/block_geometry_metrics.csv` is the supplied 122-row CNN export, preserved exactly. Its original filename and SHA-256 appear in `results/source_manifest.json`. LLE result tables/plots remain available in executed notebook outputs; separate LLE CSVs, activations and attention metrics CSVs are not included. Seven supplied MP4 videos are now available in the branch-root [visualization directory](../../visualization/), covering four CNNs and three attention readouts. Their presence does not constitute an independent model rerun. The attention notebook reports a prior local run, but its code cells have no execution outputs; those numerical claims are not independently verified by this upload.
+`results/block_geometry_metrics.csv` is the supplied 122-row CNN export, preserved exactly. Its original filename and SHA-256 appear in `results/source_manifest.json`. LLE result tables/plots remain available in executed notebook outputs; separate LLE CSVs and activations are not included. The completed attention geometry metrics are preserved in `results/attention_geometry_metrics.csv`. Seven supplied MP4 videos are now available in the branch-root [visualization directory](../../visualization/), covering four CNNs and three attention readouts. Their presence does not constitute an independent model rerun. The attention notebook is preserved as the reproducibility record for the ViT-B/16 and Swin-T geometry experiment; its numerical export is preserved in `results/attention_geometry_metrics.csv`.
 
 ```bash
 python -m unittest discover -s experiments/geometric_dynamics/tests -v
