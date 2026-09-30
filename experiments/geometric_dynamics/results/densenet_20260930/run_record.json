@@ -1,0 +1,18 @@
+{
+  "execution_site": "Google Colab",
+  "notebook_url": "https://colab.research.google.com/drive/18ROQJhjCUETMp6Ih4Y6XwmPe6l0E76o_",
+  "source_branch": "representation-vector-geometric-dynamics",
+  "reviewed_base_commit": "8f9aff121629565a5109079db662a705ad2eae2f",
+  "cohort_matching": "Same checksum-verified archive and identical maintained ZIP-order/default_rng(42) selection algorithm. Historical CNN activation archives are not in this checkout; no direct historical NPZ identity check was possible.",
+  "runtime_only_omitted": [
+    "densenet121_per_image_vectors.npz",
+    "densenet169_per_image_vectors.npz",
+    "densenet201_per_image_vectors.npz"
+  ],
+  "executed_sources": {
+    "metrics.py": "8f6db18e1e4d96bae52fadcb5d5f730242ad6b3c4c3799a22d40d1a4d774af43",
+    "run_densenet_geometry.py": "b0a1681ec41d46acff1a73caf1078c128cc60174a2f20b40ef6b105d689b5061"
+  },
+  "notebook_sha256": "449fd9fbb4cf4449e2d6e80e470d84053d2daa8eaf0dc66986e98f2629455591",
+  "validation": "Nine offline tests passed, including per-image entropy reaggregation, paired split integrity, executed embedded-source identity, runtime hashes and geometry transitions. Cumulative state equality also asserted for all four blocks in every model batch during Colab execution."
+}

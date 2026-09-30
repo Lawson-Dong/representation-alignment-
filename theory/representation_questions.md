@@ -22,7 +22,7 @@ Project branch: [CLIP semantic composition](https://github.com/Lawson-Dong/repre
 
 How does the geometry of the same samples' representation vectors evolve as they propagate through successive layers and blocks of a neural network?
 
-This project follows a matched set of 100 cat and 100 dog images through frozen pretrained ResNet, ConvNeXt, ViT, and Swin models. It studies **layerwise forward-pass transformations**, with depth as the progression variable, rather than changes in model parameters during training.
+This project follows a matched set of 100 cat and 100 dog images through frozen pretrained ResNet, ConvNeXt, ViT, Swin, and DenseNet models. It studies **layerwise forward-pass transformations**, with depth as the progression variable, rather than changes in model parameters during training.
 
 Project branch: [Representation vector geometric dynamics](https://github.com/Lawson-Dong/representation-alignment-/tree/representation-vector-geometric-dynamics).
 
@@ -97,7 +97,7 @@ Low adjacent CKA identifies candidate abrupt geometric changes, but does not est
 
 Projected animations support inspection of trajectories. Conclusions about contraction, separation, and local organization should be checked using original-space measurements because projection and interpolation can alter the visual impression.
 
-The evidence is exploratory and conditional on the sampled images, preprocessing, checkpoints, and representation readouts. In particular, ResNet-152 geometry uses V2 weights while its LLE experiment uses V1; these are separate conditions. Observed block indices are not equal computational-depth steps across architectures.
+The evidence is exploratory and conditional on the sampled images, preprocessing, checkpoints, and representation readouts. ResNet-152 geometry and the completed LLE rerun both use explicit V2 weights; the other historical CNN checkpoints remain V1. Observed block indices are not equal computational-depth steps across architectures.
 
 See the [project README](https://github.com/Lawson-Dong/representation-alignment-/blob/representation-vector-geometric-dynamics/README.md) and [experimental protocol](https://github.com/Lawson-Dong/representation-alignment-/blob/representation-vector-geometric-dynamics/experiments/geometric_dynamics/docs/protocol.md) for implementation details, provenance, and validation limits.
 

@@ -38,7 +38,7 @@ def main():
     
     # 1. Same 100 cats and 100 dogs for every model and every stage.
     # Zenodo Cats and Dogs sample: https://zenodo.org/records/5226945
-    # All listed ImageNet weights use the same resize/crop/normalization recipe.
+    # Fixed ResNet-18 V1 preprocessing controls inputs; ResNet-152 V2 has a different preferred recipe.
     transform = MODEL_SPECS[0][2].transforms()
     # Use this single transform for every architecture and weight condition.
     archive = Path('cats_dogs_light.zip')

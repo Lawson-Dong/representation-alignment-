@@ -12,7 +12,7 @@ The supplied CNN notebook contains execution outputs and exports 122 observation
 
 Maintained scripts remove browser downloads and save headless plots, export CNN vectors during the measurement pass, and extract the actual Python programs embedded in the attention notebook. Attention analysis uses the first attention readout as its cohort reference, resolving its otherwise mandatory, undocumented CNN NPZ prerequisite. The animation docstring incorrectly named ConvNeXt-Tiny; it now names attention models. No new model results are fabricated.
 
-Seven supplied MP4 videos are included in the branch-root [visualization directory](../../../visualization/). The original notebook/CSV source manifest covers the historical sources listed there; it does not establish activation-level provenance for these later video uploads. Separate activation archives and attention metrics CSVs are not included.
+Seven supplied MP4 videos are included in the branch-root [visualization directory](../../../visualization/). The original notebook/CSV source manifest covers the historical sources listed there; it does not establish activation-level provenance for these later video uploads. Separate activation archives are not included. The completed 44-row attention metrics CSV is preserved in `results/attention_geometry_metrics.csv`.
 
 ## Statistical limits
 
@@ -23,3 +23,7 @@ Permutation SD is null dispersion, not a confidence interval for unseen images. 
 ## Future work
 
 Repeat across independent image cohorts and seeds; bootstrap image identities with attention to pair dependence; compare checkpoints within each architecture; preserve manifests and software/device metadata with every run. PR and linear-probe accuracy are included in the current measurement framework alongside geometry and LLE; future runs should state which readouts were evaluated for each model. Investigate stage-boundary effects before proposing change-point claims.
+
+## DenseNet extension, 2026-09-30
+
+The [completed requested Colab run](../results/densenet_20260930/) adds DenseNet-121/169/201 V1 with the same archive and original selection algorithm, preprocessing, metric formulas, paired probes and shared LLE permutations. Dense layers read cumulative concatenated channels, verified against actual dense-block output pooling in every batch. Transitions and final norm+ReLU are separate observations. Source, identities, versions and runtime hashes accompany CSVs; activation NPZs remain outside Git. Widths, block allocation and independently trained checkpoints vary, so this is a controlled input/measurement comparison rather than a causal depth-only experiment. Historical NPZ identity checks cannot be claimed because those archives are not in the checkout. See the run README for observed endpoints and final-readout effects.
