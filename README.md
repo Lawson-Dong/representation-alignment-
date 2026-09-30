@@ -37,7 +37,7 @@ The measurements below describe complementary aspects of representation dynamics
 
 ### Class Geometry and Vector Scale
 
-Let \(x_i\) be a raw pooled representation and \(z_i=x_i/\|x_i\|_2\) its unit-normalized vector.
+Let $x_i$ be a raw pooled representation and $z_i=x_i/\|x_i\|_2$ its unit-normalized vector.
 
 | Measurement | Code field | Interpretation |
 |---|---|---|
@@ -55,7 +55,7 @@ $$
 
 A larger **S** indicates greater between-class distance relative to within-class distance. It does **not** establish absolute within-class contraction: inspect both distances separately.
 
-For raw class centroids \(\mu_{\mathrm{cat}}\) and \(\mu_{\mathrm{dog}}\), the Fisher ratio is:
+For raw class centroids $\mu_{\mathrm{cat}}$ and $\mu_{\mathrm{dog}}$, the Fisher ratio is:
 
 $$
 F_\ell =
@@ -66,15 +66,15 @@ $$
 
 Fisher ratio is invariant to a common scalar rescaling, but can change under feature-specific scaling. Raw norms are scale-sensitive and should be interpreted in the context of feature width and pooling.
 
-For unit vectors, \(d_E^2=2d_{\cos}\). The Euclidean and cosine measurements therefore do not provide independent evidence; their pairwise means differ because the square root is applied before averaging Euclidean distances.
+For unit vectors, $d_E^2=2d_{\cos}$. The Euclidean and cosine measurements therefore do not provide independent evidence; their pairwise means differ because the square root is applied before averaging Euclidean distances.
 
 ### Geometry Across Adjacent Blocks
 
 | Measurement | Code field | Interpretation |
 |---|---|---|
 | Adjacent linear CKA | `CKA_prev` | Similarity between centered raw sample Gram matrices at consecutive observations; supports different feature widths. |
-| Change in relative separation | `delta_S` | \(S_\ell-S_{\ell-1}\); locates steps that increase or decrease relative class separation. |
-| Change in Fisher ratio | `delta_Fisher_raw` | \(F_\ell-F_{\ell-1}\); tracks changes in raw-vector class separation relative to scatter. |
+| Change in relative separation | `delta_S` | $S_\ell-S_{\ell-1}$; locates steps that increase or decrease relative class separation. |
+| Change in Fisher ratio | `delta_Fisher_raw` | $F_\ell-F_{\ell-1}$; tracks changes in raw-vector class separation relative to scatter. |
 
 The delta fields are calculated in the CNN transition analysis, rather than exported as columns in the base geometry CSV. Stage-boundary summaries compare adjacent CKA and changes in S at boundaries versus other observations.
 
@@ -88,15 +88,15 @@ $$
 H_k(i) = -\sum_{c \in \{\mathrm{cat},\mathrm{dog}\}} p_c(i;k)\log_2 p_c(i;k)
 $$
 
-Here \(p_c(i;k)\) is the fraction of the \(k\) neighbors belonging to class \(c\), with \(0\log_2 0=0\). Low entropy indicates a locally label-consistent neighborhood; high entropy indicates class mixing. The analysis uses **k = 4, 8, 16, 32, 64**.
+Here $p_c(i;k)$ is the fraction of the $k$ neighbors belonging to class $c$, with $0\log_2 0=0$. Low entropy indicates a locally label-consistent neighborhood; high entropy indicates class mixing. The analysis uses **k = 4, 8, 16, 32, 64**.
 
 | Measurement | Code field | Interpretation |
 |---|---|---|
 | Per-image entropy | `H` | Local class mixing around each individual image vector. |
-| Mean local label entropy | `LLE` | Mean \(H_k(i)\) over the sampled images at one observation. |
+| Mean local label entropy | `LLE` | Mean $H_k(i)$ over the sampled images at one observation. |
 | Shuffled-label reference | `shuffle_mean`, `shuffle_sd` | Mean and standard deviation of mean entropy over 100 label permutations. |
-| Relative local label order | `order_vs_shuffle` | \(1-\overline H/\overline H_{\mathrm{shuffle}}\); positive values indicate less mixing than the shuffled baseline. |
-| High-entropy fraction | `fraction_H_ge_0_8` | Fraction of samples with \(H_k(i)\geq0.8\). |
+| Relative local label order | `order_vs_shuffle` | $1-\overline H/\overline H_{\mathrm{shuffle}}$; positive values indicate less mixing than the shuffled baseline. |
+| High-entropy fraction | `fraction_H_ge_0_8` | Fraction of samples with $H_k(i)\geq0.8$. |
 | Endpoint entropy decrease | `net_drop` | Initial mean LLE minus final mean LLE, by model and k. |
 | Number of entropy-increasing transitions | `n_increasing_transitions` | Counts adjacent increases in mean LLE, allowing a net decrease to be distinguished from monotonic decrease. |
 
@@ -118,21 +118,21 @@ The ResNet-18 diagnostic examines whether high-entropy samples are concentrated 
 | Boundary enrichment test | `hypergeom_p` | Exploratory hypergeometric test of high-entropy sample enrichment in the closest quartile. |
 | Misclassification among high-entropy samples | `high_misclassified` | Helps distinguish boundary mixing from confidently misclassified neighborhoods. |
 
-High entropy uses \(H\geq0.8\); “near boundary” uses the lowest quartile of absolute margins. These are operational thresholds. Margin magnitudes from different fold-standardized spaces are not a common original-space distance. The enrichment tests are exploratory and should be interpreted alongside k sensitivity.
+High entropy uses $H\geq0.8$; “near boundary” uses the lowest quartile of absolute margins. These are operational thresholds. Margin magnitudes from different fold-standardized spaces are not a common original-space distance. The enrichment tests are exploratory and should be interpreted alongside k sensitivity.
 
 ### Effective Dimension: Participation Ratio (PR)
 
-PR measures how broadly variance is distributed across representation directions. In the CNN geometry pipeline, unit-normalized vectors are centered across samples, and \(\lambda_j\) are the eigenvalues of their sample Gram matrix:
+PR measures how broadly variance is distributed across representation directions. In the CNN geometry pipeline, unit-normalized vectors are centered across samples, and $\lambda_j$ are the eigenvalues of their sample Gram matrix:
 
-$
+$$
 \mathrm{PR}_\ell =
 \frac{\left(\sum_j \lambda_j\right)^2}{\sum_j \lambda_j^2}
-$
+$$
 
 | Measurement | Code field | Interpretation |
 |---|---|---|
 | Participation ratio | `PR` | Effective dimension of the centered unit-vector cloud. |
-| Adjacent change in PR | `delta_PR` | \(\mathrm{PR}_\ell-\mathrm{PR}_{\ell-1}\); calculated in the CNN transition analysis. |
+| Adjacent change in PR | `delta_PR` | $\mathrm{PR}_\ell-\mathrm{PR}_{\ell-1}$; calculated in the CNN transition analysis. |
 
 Lower PR indicates variance concentrated in fewer directions; higher PR indicates a more distributed variance spectrum. PR is a spectral effective-dimension estimator, not a direct estimate of manifold intrinsic dimension. A decrease in PR does not by itself establish class separation or reduced pairwise distances.
 
@@ -156,7 +156,17 @@ PR and probe accuracy complement the distance, CKA, and entropy measurements. To
 
 ## Visualizations
 
-The [visualization directory](visualization/) is the destination for representation-dynamics videos.
+The [visualization directory](visualization/) contains seven representation-dynamics videos:
+
+| Model / readout | Video |
+|---|---|
+| ResNet-18 | [10-second projection](visualization/resnet18_real_projection_10s.mp4) |
+| ResNet-152 | [10-second projection](visualization/resnet152_real_projection_10s.mp4) |
+| ConvNeXt-Tiny | [14-second projection](visualization/convnext_tiny_real_projection_slow_14s.mp4) |
+| ConvNeXt-Base | [16-second projection](visualization/convnext_base_real_projection_slow_16s.mp4) |
+| ViT-B/16 CLS | [12-second geometry animation](visualization/vit_b16_cls_geometry_slow_12s.mp4) |
+| ViT-B/16 patch mean | [12-second geometry animation](visualization/vit_b16_patchmean_geometry_slow_12s.mp4) |
+| Swin-T | [12-second geometry animation](visualization/swin_t_geometry_slow_12s.mp4) |
 
 The documented animation method projects same-image cosine fingerprints using one shared PCA fit across the observations in each video. Measured observations form the endpoints; motion between them is interpolated. Transitions with the two lowest adjacent CKA values receive more screen time.
 
