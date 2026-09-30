@@ -8,9 +8,11 @@ CNN outputs use spatial mean pooling of NCHW activations; stems are after maxpoo
 
 ## Evidence and changes
 
-The supplied CNN notebook contains execution outputs and exports 122 observations. The supplied LLE notebook contains executed ResNet-18/boundary analyses and outputs for all three added CNNs; the markdown saying the added cells were not run is stale. Those outputs document a prior run, not execution in this repository setup. Original notebooks are unchanged to preserve provenance.
+The supplied CNN notebook contains execution outputs and exports 122 observations. The supplied LLE notebook contains executed ResNet-18/boundary analyses and outputs for all three added CNNs; the markdown saying the added cells were not run is stale. Those outputs document a prior run, not execution in this repository setup. Original notebooks are unchanged to preserve provenance. Their historical descriptions of PR/probes as auxiliary do not override the current [measurement framework](../../../README.md#main-measurements).
 
 Maintained scripts remove browser downloads and save headless plots, export CNN vectors during the measurement pass, and extract the actual Python programs embedded in the attention notebook. Attention analysis uses the first attention readout as its cohort reference, resolving its otherwise mandatory, undocumented CNN NPZ prerequisite. The animation docstring incorrectly named ConvNeXt-Tiny; it now names attention models. No new model results are fabricated.
+
+Seven supplied MP4 videos are included in the branch-root [visualization directory](../../../visualization/). The original notebook/CSV source manifest covers the historical sources listed there; it does not establish activation-level provenance for these later video uploads. Separate activation archives and attention metrics CSVs are not included.
 
 ## Statistical limits
 
@@ -20,4 +22,4 @@ Permutation SD is null dispersion, not a confidence interval for unseen images. 
 
 ## Future work
 
-Repeat across independent image cohorts and seeds; bootstrap image identities with attention to pair dependence; compare checkpoints within each architecture; preserve manifests and software/device metadata with every run. For a focused follow-up, make probe and PR readouts optional while retaining these original baselines. Investigate stage-boundary effects before proposing change-point claims.
+Repeat across independent image cohorts and seeds; bootstrap image identities with attention to pair dependence; compare checkpoints within each architecture; preserve manifests and software/device metadata with every run. PR and linear-probe accuracy are included in the current measurement framework alongside geometry and LLE; future runs should state which readouts were evaluated for each model. Investigate stage-boundary effects before proposing change-point claims.
