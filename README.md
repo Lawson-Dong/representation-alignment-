@@ -159,7 +159,7 @@ PR and probe accuracy complement the distance, CKA, and entropy measurements. To
 
 ## Visualizations
 
-The [visualization directory](visualization/) contains seven representation-dynamics videos:
+The [visualization directory](visualization/) contains ten representation-dynamics videos:
 
 | Model / readout | Video |
 |---|---|
@@ -170,6 +170,9 @@ The [visualization directory](visualization/) contains seven representation-dyna
 | ViT-B/16 CLS | [12-second geometry animation](visualization/vit_b16_cls_geometry_slow_12s.mp4) |
 | ViT-B/16 patch mean | [12-second geometry animation](visualization/vit_b16_patchmean_geometry_slow_12s.mp4) |
 | Swin-T | [12-second geometry animation](visualization/swin_t_geometry_slow_12s.mp4) |
+| DenseNet-121 | [16-second geometry animation](visualization/densenet121_geometry_slow_16s.mp4) |
+| DenseNet-169 | [16-second geometry animation](visualization/densenet169_geometry_slow_16s.mp4) |
+| DenseNet-201 | [16-second geometry animation](visualization/densenet201_geometry_slow_16s.mp4) |
 
 The documented animation method projects same-image cosine fingerprints using one shared PCA fit across the observations in each video. Measured observations form the endpoints; motion between them is interpolated. Transitions with the two lowest adjacent CKA values receive more screen time.
 
