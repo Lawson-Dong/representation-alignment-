@@ -1,14 +1,14 @@
-"""Maintained command-line reproduction of the supplied experiment."""
+"""Reproduce the per-metric notebook and stratified bootstrap (GPU recommended)."""
 import os
 from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 from IPython.display import display
-OUTPUT = Path(os.environ.get("GEOMETRY_OUTPUT_DIR", "outputs")).resolve()
-OUTPUT.mkdir(parents=True, exist_ok=True)
-os.chdir(OUTPUT)
 
 def main():
+    output = Path(os.environ.get("GEOMETRY_OUTPUT_DIR", "outputs")).resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    os.chdir(output)
     import torch, torchvision, numpy as np, pandas as pd, matplotlib.pyplot as plt
     from torchvision import models
     from torch.utils.data import Dataset, DataLoader, Subset
@@ -20,7 +20,6 @@ def main():
     from sklearn.decomposition import PCA
     from PIL import Image
     from io import BytesIO
-    from pathlib import Path
     import zipfile, urllib.request, hashlib, gc
     
     SEED=42; N_PER_CLASS=100; BATCH_SIZE=16; PROBE_SPLITS=5
@@ -35,10 +34,14 @@ def main():
     ]
     print('torch',torch.__version__,'torchvision',torchvision.__version__,'device',device)
     
-    
+    BOOTSTRAP_REPEATS = 1000
+    BOOTSTRAP_SEED = 20261006
+    RESULT_DIR = Path("block_geometry_metrics")
+    RESULT_DIR.mkdir(exist_ok=True)
+
     # 1. Same 100 cats and 100 dogs for every model and every stage.
     # Zenodo Cats and Dogs sample: https://zenodo.org/records/5226945
-    # Fixed ResNet-18 V1 preprocessing controls inputs; ResNet-152 V2 has a different preferred recipe.
+    # Fixed ResNet-18 V1 preprocessing for all models; ResNet-152 V2 recommends a different recipe.
     transform = MODEL_SPECS[0][2].transforms()
     # Use this single transform for every architecture and weight condition.
     archive = Path('cats_dogs_light.zip')
@@ -73,8 +76,7 @@ def main():
     loader = DataLoader(selected, batch_size=BATCH_SIZE, shuffle=False, num_workers=0, pin_memory=(device.type == 'cuda'))
     labels = np.asarray([y_all[i] for i in indices])
     print(f'{len(selected)} images: {(labels == 3).sum()} cats, {(labels == 5).sum()} dogs')
-    
-    
+
     # The hook list follows actual module execution order. Stage boundaries are explicit.
     def observed_modules(name,model):
         pairs=[]; boundaries=[]
@@ -119,8 +121,99 @@ def main():
             model.cpu()
             if device.type=='cuda': torch.cuda.empty_cache()
         return {key:torch.cat(parts).numpy() for key,parts in record.items()}
-    
-    
+
+    # Run after the notebook's setup, dataset, and hook-function cells.
+    # The saved rows preserve the selected image order across all nine stages.
+    model = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
+    pairs, _ = observed_modules('ResNet-18', model)
+    feats = extract_blocks(model, loader, pairs)
+    del model
+    stage_names = np.array(list(feats))
+    names = np.array([raw.names[i] for i in indices])
+    assert len(stage_names) == 9 and len(names) == len(labels) == 200
+    payload = {'stages': stage_names, 'labels': labels, 'archive_paths': names,
+               'selected_indices': np.array(indices)}
+    for j, stage in enumerate(stage_names):
+        payload[f'features_{j}'] = feats[stage].astype(np.float32)
+    out = 'resnet18_per_image_vectors.npz'
+    np.savez_compressed(out, **payload)
+    print('Saved', out, 'stages:', list(stage_names),
+          'shapes:', [feats[s].shape for s in stage_names],
+          'label counts:', np.unique(labels, return_counts=True))
+
+    # Run after setup, dataset, and hook-function cells in this notebook.
+    # The sample order and preprocessing are identical to the ResNet-18 export.
+    model152 = models.resnet152(weights=models.ResNet152_Weights.IMAGENET1K_V2)
+    pairs152, _ = observed_modules('ResNet-152', model152)
+    feats152 = extract_blocks(model152, loader, pairs152)
+    del model152
+    stages152 = np.array(list(feats152))
+    assert len(stages152) == 51 and len(labels) == 200
+    payload152 = {
+        'stages': stages152,
+        'labels': labels,
+        'archive_paths': np.array([raw.names[i] for i in indices]),
+        'selected_indices': np.array(indices),
+    }
+    for j, stage in enumerate(stages152):
+        payload152[f'features_{j}'] = feats152[stage].astype(np.float32)
+    out152 = 'resnet152_per_image_vectors.npz'
+    np.savez_compressed(out152, **payload152)
+    print('Saved', out152, 'points:', len(stages152),
+          'first/last:', stages152[0], stages152[-1],
+          'feature widths:', sorted(set(x.shape[1] for x in feats152.values())),
+          'label counts:', np.unique(labels, return_counts=True))
+    del feats152, payload152
+    gc.collect()
+
+    # Same selected 200 images and transform as the ResNet experiments.
+    model_tiny = models.convnext_tiny(weights=models.ConvNeXt_Tiny_Weights.IMAGENET1K_V1)
+    pairs_tiny, _ = observed_modules('ConvNeXt-Tiny', model_tiny)
+    feats_tiny = extract_blocks(model_tiny, loader, pairs_tiny)
+    del model_tiny
+    stages_tiny = np.array(list(feats_tiny))
+    assert len(stages_tiny) == 22 and len(labels) == 200
+    payload_tiny = {
+        'stages': stages_tiny,
+        'labels': labels,
+        'archive_paths': np.array([raw.names[i] for i in indices]),
+        'selected_indices': np.array(indices),
+    }
+    for j, stage in enumerate(stages_tiny):
+        payload_tiny[f'features_{j}'] = feats_tiny[stage].astype(np.float32)
+    out_tiny = 'convnext_tiny_per_image_vectors.npz'
+    np.savez_compressed(out_tiny, **payload_tiny)
+    print('Saved', out_tiny, 'points:', len(stages_tiny),
+          'stages:', list(stages_tiny),
+          'feature widths:', sorted(set(x.shape[1] for x in feats_tiny.values())),
+          'label counts:', np.unique(labels, return_counts=True))
+    del feats_tiny, payload_tiny
+    gc.collect()
+
+    # Same selected 200 images and transform as the ResNet experiments.
+    model_base = models.convnext_base(weights=models.ConvNeXt_Base_Weights.IMAGENET1K_V1)
+    pairs_base, _ = observed_modules('ConvNeXt-Base', model_base)
+    feats_base = extract_blocks(model_base, loader, pairs_base)
+    del model_base
+    stages_base = np.array(list(feats_base))
+    assert len(stages_base) == 40 and len(labels) == 200
+    payload_base = {
+        'stages': stages_base,
+        'labels': labels,
+        'archive_paths': np.array([raw.names[i] for i in indices]),
+        'selected_indices': np.array(indices),
+    }
+    for j, stage in enumerate(stages_base):
+        payload_base[f'features_{j}'] = feats_base[stage].astype(np.float32)
+    out_base = 'convnext_base_per_image_vectors.npz'
+    np.savez_compressed(out_base, **payload_base)
+    print('Saved', out_base, 'points:', len(stages_base),
+          'stages:', list(stages_base),
+          'feature widths:', sorted(set(x.shape[1] for x in feats_base.values())),
+          'label counts:', np.unique(labels, return_counts=True))
+    del feats_base, payload_base
+    gc.collect()
+
     # Metrics: cosine pairwise geometry on per-image unit vectors; raw Fisher ratio.
     # Squared Euclidean distance on unit vectors is 2 * cosine distance, so these are not independent measurements.
     def representation_stats(x,y):
@@ -175,23 +268,21 @@ def main():
             k=centered_gram(z)
             points.extend([k[y==3].mean(0),k[y==5].mean(0)])
         return PCA(n_components=2).fit_transform(np.asarray(points))
-    
-    
+
+    from stratified_bootstrap import CACHE_FILES, bootstrap_caches, export_metric_csvs
+
     splits=list(StratifiedShuffleSplit(n_splits=PROBE_SPLITS,test_size=.30,random_state=SEED).split(np.zeros(len(labels)),labels))
     all_rows=[]; trajectories={}; model_boundaries={}; model_stages={}
     for name,constructor,weights in MODEL_SPECS:
         print('Starting',name,flush=True)
-        model=constructor(weights=weights)
-        pairs,boundaries=observed_modules(name,model)
-        feats=extract_blocks(model,loader,pairs)
-        del model; gc.collect()
+        with np.load(CACHE_FILES[name], allow_pickle=False) as data:
+            assert np.array_equal(data['labels'], labels)
+            assert np.array_equal(data['archive_paths'], np.array([raw.names[i] for i in indices]))
+            feats = {str(stage): data[f'features_{j}'].copy() for j, stage in enumerate(data['stages'])}
+        boundaries = [stage for stage in feats if stage == 'stem' or stage.startswith('down') or stage.endswith('.b1')]
+        pairs = list(feats.items())
         model_boundaries[name]=boundaries
         model_stages[name]=list(feats)
-        payload = {'stages': np.array(list(feats)), 'labels': labels,
-                   'archive_paths': np.array([raw.names[i] for i in indices]),
-                   'selected_indices': np.array(indices), 'weights': np.array(str(weights))}
-        for j, x in enumerate(feats.values()): payload[f'features_{j}'] = x.astype(np.float32)
-        np.savez_compressed(name.lower().replace('-', '').replace('convnext', 'convnext_') + '_per_image_vectors.npz', **payload)
         trajectories[name]=relative_geometry_trajectory(feats,labels)
         previous=None
         for depth,(stage,x) in enumerate(feats.items()):
@@ -207,70 +298,211 @@ def main():
     display(results.groupby('model',sort=False).agg(points=('stage','size'),
         min_adjacent_CKA=('CKA_prev','min'),S_first=('S','first'),S_last=('S','last'),
         probe_first=('probe_mean','first'),probe_last=('probe_mean','last')).round(3))
-    
-    
-    fig,axs=plt.subplots(3,2,figsize=(16,12),constrained_layout=True)
-    measures=[('CKA_prev','Adjacent linear CKA (raw pooled vectors)'),
-              ('d_within_cos','Within-class cosine distance'),('d_between_cos','Between-class cosine distance'),
-              ('S','Relative separation S'),('Fisher_raw','Raw-vector Fisher ratio'),('PR','Effective dimension PR')]
-    for ax,(field,title) in zip(axs.flat,measures):
-        for name,g in results.groupby('model',sort=False):
-            ax.plot(g.depth,g[field],marker='.',markersize=3,label=name)
-        ax.set(title=title,xlabel='Observed block / transition index')
-        ax.legend(fontsize=8)
-    plt.savefig('cnn_figure_1.png', dpi=160); plt.close()
-    
-    fig,axs=plt.subplots(1,2,figsize=(16,4),constrained_layout=True)
-    for name,g in results.groupby('model',sort=False):
-        axs[0].plot(g.depth,g.d_within_euclid_unit,label=f'{name} within')
-        axs[0].plot(g.depth,g.d_between_euclid_unit,'--',label=f'{name} between')
-        axs[1].plot(g.depth,g.probe_mean,label=name)
-        axs[1].fill_between(g.depth,g.probe_mean-g.probe_sd,g.probe_mean+g.probe_sd,alpha=.12)
-    axs[0].set(title='Euclidean distances of unit vectors',xlabel='Observed index',ylabel='Mean distance')
-    axs[1].axhline(.5,color='gray',linestyle=':')
-    axs[1].set(title='Held-out linear probe',xlabel='Observed index',ylabel='Accuracy',ylim=(.4,1.05))
-    for ax in axs: ax.legend(fontsize=7,ncol=2)
-    plt.savefig('cnn_figure_2.png', dpi=160); plt.close()
-    
-    
-    fig,axs=plt.subplots(2,2,figsize=(12,10),constrained_layout=True)
-    for ax,(name,coords) in zip(axs.flat,trajectories.items()):
-        cat,dog=coords[::2],coords[1::2]
-        ax.plot(cat[:,0],cat[:,1],'-o',markersize=2,label='cat centroid')
-        ax.plot(dog[:,0],dog[:,1],'-o',markersize=2,label='dog centroid')
-        for i in [0,len(cat)-1]:
-            ax.annotate(str(i),cat[i],fontsize=8)
-            ax.annotate(str(i),dog[i],fontsize=8)
-        for i in range(len(cat)):
-            ax.plot([cat[i,0],dog[i,0]],[cat[i,1],dog[i,1]],color='gray',alpha=.13)
-        ax.set(title=name,xlabel='PCA 1 of similarity fingerprints',ylabel='PCA 2')
-        ax.legend(fontsize=8)
-    plt.savefig('cnn_figure_3.png', dpi=160); plt.close()
-    
-    # See transitions, not merely endpoint effects.
-    for name,g in results.groupby('model',sort=False):
-        print('\n',name)
-        display(g.nsmallest(6,'CKA_prev')[['stage','boundary','CKA_prev','S','Fisher_raw','PR','probe_mean']].round(3))
-    
-    
-    # Boundary changes and category-separation increments
-    changes = results.copy()
-    for field in ['S', 'Fisher_raw', 'PR', 'probe_mean']:
-        changes['delta_' + field] = changes.groupby('model', sort=False)[field].diff()
-    valid = changes.dropna(subset=['CKA_prev'])
-    boundary_summary = (valid.groupby(['model', 'boundary'], sort=False)
-                        .agg(n=('CKA_prev','size'), median_CKA=('CKA_prev','median'),
-                             median_delta_S=('delta_S','median'), mean_delta_S=('delta_S','mean'))
-                        .reset_index())
-    display(boundary_summary.round(3))
-    for name, g in valid.groupby('model', sort=False):
-        print(name, 'largest positive S increments')
-        display(g.nlargest(5, 'delta_S')[['stage','boundary','CKA_prev','delta_S','S','delta_Fisher_raw','delta_PR','probe_mean']].round(3))
-    print('Boundary is the first block of a ResNet stage, or a ConvNeXt downsample / first stage block. Consecutive measurements are not equal-depth steps.')
-    
-    
-    # Full per-block measurements for later analysis
-    results.to_csv('block_geometry_metrics.csv', index=False)
-    print('Saved', len(results), 'rows to block_geometry_metrics.csv')
 
-if __name__ == "__main__": main()
+    bootstrap = bootstrap_caches('.', BOOTSTRAP_REPEATS, BOOTSTRAP_SEED)
+    for filename, frame in bootstrap.items():
+        frame.to_csv(RESULT_DIR / f'{filename}.csv', index=False)
+    display(bootstrap['CKA_prev_bootstrap'].head())
+
+    # CKA prev: one independent figure per architecture.
+    results[['model','depth','stage','boundary','CKA_prev']].to_csv(RESULT_DIR / 'CKA_prev.csv', index=False)
+    for name, g in results.groupby('model', sort=False):
+        fig, ax = plt.subplots(figsize=(9, 4), constrained_layout=True)
+        ax.plot(g.depth, g['CKA_prev'], '.-', label='Original sample')
+        band = bootstrap['CKA_prev_bootstrap'].query('model == @name').sort_values('depth')
+        assert np.array_equal(g.depth.to_numpy(), band.depth.to_numpy())
+        ax.fill_between(band.depth.to_numpy(), band.p10.to_numpy(), band.p90.to_numpy(), alpha=.2,
+                        label='Pointwise bootstrap p10–p90 (80%)')
+        for depth in g.loc[g.boundary & (g.depth > 0), 'depth']:
+            ax.axvline(depth, color='gray', linestyle=':', alpha=.35)
+        ax.set(title=name + ' — CKA prev', xlabel='Observed layer / transition index', ylabel='CKA_prev')
+        ax.legend()
+        fig.savefig(RESULT_DIR / (name + '_CKA_prev.png'), dpi=160)
+        plt.show()
+
+    # d within cos: one independent figure per architecture.
+    results[['model','depth','stage','boundary','d_within_cos']].to_csv(RESULT_DIR / 'd_within_cos.csv', index=False)
+    for name, g in results.groupby('model', sort=False):
+        fig, ax = plt.subplots(figsize=(9, 4), constrained_layout=True)
+        ax.plot(g.depth, g['d_within_cos'], '.-', label='Original sample')
+        for depth in g.loc[g.boundary & (g.depth > 0), 'depth']:
+            ax.axvline(depth, color='gray', linestyle=':', alpha=.35)
+        ax.set(title=name + ' — d within cos', xlabel='Observed layer / transition index', ylabel='d_within_cos')
+        ax.legend()
+        fig.savefig(RESULT_DIR / (name + '_d_within_cos.png'), dpi=160)
+        plt.show()
+
+    # d between cos: one independent figure per architecture.
+    results[['model','depth','stage','boundary','d_between_cos']].to_csv(RESULT_DIR / 'd_between_cos.csv', index=False)
+    for name, g in results.groupby('model', sort=False):
+        fig, ax = plt.subplots(figsize=(9, 4), constrained_layout=True)
+        ax.plot(g.depth, g['d_between_cos'], '.-', label='Original sample')
+        for depth in g.loc[g.boundary & (g.depth > 0), 'depth']:
+            ax.axvline(depth, color='gray', linestyle=':', alpha=.35)
+        ax.set(title=name + ' — d between cos', xlabel='Observed layer / transition index', ylabel='d_between_cos')
+        ax.legend()
+        fig.savefig(RESULT_DIR / (name + '_d_between_cos.png'), dpi=160)
+        plt.show()
+
+    # S: one independent figure per architecture.
+    results[['model','depth','stage','boundary','S']].to_csv(RESULT_DIR / 'S.csv', index=False)
+    for name, g in results.groupby('model', sort=False):
+        fig, ax = plt.subplots(figsize=(9, 4), constrained_layout=True)
+        ax.plot(g.depth, g['S'], '.-', label='Original sample')
+        for depth in g.loc[g.boundary & (g.depth > 0), 'depth']:
+            ax.axvline(depth, color='gray', linestyle=':', alpha=.35)
+        ax.set(title=name + ' — S', xlabel='Observed layer / transition index', ylabel='S')
+        ax.legend()
+        fig.savefig(RESULT_DIR / (name + '_S.png'), dpi=160)
+        plt.show()
+
+    # d within euclid unit: one independent figure per architecture.
+    results[['model','depth','stage','boundary','d_within_euclid_unit']].to_csv(RESULT_DIR / 'd_within_euclid_unit.csv', index=False)
+    for name, g in results.groupby('model', sort=False):
+        fig, ax = plt.subplots(figsize=(9, 4), constrained_layout=True)
+        ax.plot(g.depth, g['d_within_euclid_unit'], '.-', label='Original sample')
+        for depth in g.loc[g.boundary & (g.depth > 0), 'depth']:
+            ax.axvline(depth, color='gray', linestyle=':', alpha=.35)
+        ax.set(title=name + ' — d within euclid unit', xlabel='Observed layer / transition index', ylabel='d_within_euclid_unit')
+        ax.legend()
+        fig.savefig(RESULT_DIR / (name + '_d_within_euclid_unit.png'), dpi=160)
+        plt.show()
+
+    # d between euclid unit: one independent figure per architecture.
+    results[['model','depth','stage','boundary','d_between_euclid_unit']].to_csv(RESULT_DIR / 'd_between_euclid_unit.csv', index=False)
+    for name, g in results.groupby('model', sort=False):
+        fig, ax = plt.subplots(figsize=(9, 4), constrained_layout=True)
+        ax.plot(g.depth, g['d_between_euclid_unit'], '.-', label='Original sample')
+        for depth in g.loc[g.boundary & (g.depth > 0), 'depth']:
+            ax.axvline(depth, color='gray', linestyle=':', alpha=.35)
+        ax.set(title=name + ' — d between euclid unit', xlabel='Observed layer / transition index', ylabel='d_between_euclid_unit')
+        ax.legend()
+        fig.savefig(RESULT_DIR / (name + '_d_between_euclid_unit.png'), dpi=160)
+        plt.show()
+
+    # Fisher raw: one independent figure per architecture.
+    results[['model','depth','stage','boundary','Fisher_raw']].to_csv(RESULT_DIR / 'Fisher_raw.csv', index=False)
+    for name, g in results.groupby('model', sort=False):
+        fig, ax = plt.subplots(figsize=(9, 4), constrained_layout=True)
+        ax.plot(g.depth, g['Fisher_raw'], '.-', label='Original sample')
+        for depth in g.loc[g.boundary & (g.depth > 0), 'depth']:
+            ax.axvline(depth, color='gray', linestyle=':', alpha=.35)
+        ax.set(title=name + ' — Fisher raw', xlabel='Observed layer / transition index', ylabel='Fisher_raw')
+        ax.legend()
+        fig.savefig(RESULT_DIR / (name + '_Fisher_raw.png'), dpi=160)
+        plt.show()
+
+    # PR: one independent figure per architecture.
+    results[['model','depth','stage','boundary','PR']].to_csv(RESULT_DIR / 'PR.csv', index=False)
+    for name, g in results.groupby('model', sort=False):
+        fig, ax = plt.subplots(figsize=(9, 4), constrained_layout=True)
+        ax.plot(g.depth, g['PR'], '.-', label='Original sample')
+        for depth in g.loc[g.boundary & (g.depth > 0), 'depth']:
+            ax.axvline(depth, color='gray', linestyle=':', alpha=.35)
+        ax.set(title=name + ' — PR', xlabel='Observed layer / transition index', ylabel='PR')
+        ax.legend()
+        fig.savefig(RESULT_DIR / (name + '_PR.png'), dpi=160)
+        plt.show()
+
+    # mean raw norm: one independent figure per architecture.
+    results[['model','depth','stage','boundary','mean_raw_norm']].to_csv(RESULT_DIR / 'mean_raw_norm.csv', index=False)
+    for name, g in results.groupby('model', sort=False):
+        fig, ax = plt.subplots(figsize=(9, 4), constrained_layout=True)
+        ax.plot(g.depth, g['mean_raw_norm'], '.-', label='Original sample')
+        for depth in g.loc[g.boundary & (g.depth > 0), 'depth']:
+            ax.axvline(depth, color='gray', linestyle=':', alpha=.35)
+        ax.set(title=name + ' — mean raw norm', xlabel='Observed layer / transition index', ylabel='mean_raw_norm')
+        ax.legend()
+        fig.savefig(RESULT_DIR / (name + '_mean_raw_norm.png'), dpi=160)
+        plt.show()
+
+    # probe mean: one independent figure per architecture.
+    results[['model','depth','stage','boundary','probe_mean']].to_csv(RESULT_DIR / 'probe_mean.csv', index=False)
+    for name, g in results.groupby('model', sort=False):
+        fig, ax = plt.subplots(figsize=(9, 4), constrained_layout=True)
+        ax.plot(g.depth, g['probe_mean'], '.-', label='Original sample')
+        for depth in g.loc[g.boundary & (g.depth > 0), 'depth']:
+            ax.axvline(depth, color='gray', linestyle=':', alpha=.35)
+        ax.set(title=name + ' — probe mean', xlabel='Observed layer / transition index', ylabel='probe_mean')
+        ax.legend()
+        fig.savefig(RESULT_DIR / (name + '_probe_mean.png'), dpi=160)
+        plt.show()
+
+    # probe sd: one independent figure per architecture.
+    results[['model','depth','stage','boundary','probe_sd']].to_csv(RESULT_DIR / 'probe_sd.csv', index=False)
+    for name, g in results.groupby('model', sort=False):
+        fig, ax = plt.subplots(figsize=(9, 4), constrained_layout=True)
+        ax.plot(g.depth, g['probe_sd'], '.-', label='Original sample')
+        for depth in g.loc[g.boundary & (g.depth > 0), 'depth']:
+            ax.axvline(depth, color='gray', linestyle=':', alpha=.35)
+        ax.set(title=name + ' — probe sd', xlabel='Observed layer / transition index', ylabel='probe_sd')
+        ax.legend()
+        fig.savefig(RESULT_DIR / (name + '_probe_sd.png'), dpi=160)
+        plt.show()
+
+    trajectory_rows = []
+    for name, coords in trajectories.items():
+        g = results.query('model == @name').sort_values('depth')
+        fig, ax = plt.subplots(figsize=(7, 5), constrained_layout=True)
+        for offset, category in [(0, 'cat'), (1, 'dog')]:
+            xy = coords[offset::2]
+            ax.plot(xy[:, 0], xy[:, 1], '-o', markersize=3, label=category + ' centroid')
+            for j, row in enumerate(g.itertuples()):
+                trajectory_rows.append(dict(model=name, depth=row.depth, stage=row.stage, category=category,
+                                            pca1=xy[j, 0], pca2=xy[j, 1]))
+        ax.set(title=name + ' — similarity-fingerprint trajectory', xlabel='PCA 1', ylabel='PCA 2')
+        ax.legend()
+        fig.savefig(RESULT_DIR / (name + '_similarity_fingerprint_trajectory.png'), dpi=160)
+        plt.show()
+    pd.DataFrame(trajectory_rows).to_csv(RESULT_DIR / 'similarity_fingerprint_trajectory.csv', index=False)
+
+    dip = bootstrap['boundary_dip']
+    display(dip)
+    for name, g in dip.groupby('model', sort=False):
+        fig, ax = plt.subplots(figsize=(8, 4), constrained_layout=True)
+        y = np.arange(len(g))
+        ax.hlines(y, g.p10, g.p90, linewidth=3, label='Bootstrap p10–p90 (80%)')
+        ax.scatter(g.estimate, y, label='Original Δ', zorder=3)
+        ax.axvline(0, color='gray', linestyle=':')
+        ax.set_yticks(y, g.stage)
+        ax.set(title=name + ' — within-stage dip', xlabel='Median later-block CKA − first-block CKA')
+        ax.legend()
+        fig.savefig(RESULT_DIR / (name + '_boundary_dip.png'), dpi=160)
+        plt.show()
+
+    import json, platform, shutil
+    export_metric_csvs(results, RESULT_DIR)
+    assert len(results) == 122
+    assert all(np.isfinite(results.loc[results.depth > 0, 'CKA_prev']))
+    for name, g in results.groupby('model', sort=False):
+        check = bootstrap['CKA_prev_bootstrap'].query('model == @name')
+        assert np.allclose(g.CKA_prev, check.estimate, equal_nan=True, atol=1e-10)
+    record = dict(status='completed', bootstrap_repeats=BOOTSTRAP_REPEATS,
+                  bootstrap_seed=BOOTSTRAP_SEED, sample_seed=SEED,
+                  interval='pointwise p10-p90 (central 80%)',
+                  classes={str(c): int((labels == c).sum()) for c in np.unique(labels)},
+                  models={name: str(weights) for name, _, weights in MODEL_SPECS},
+                  preprocessing=str(transform), python=platform.python_version(),
+                  torch=torch.__version__, torchvision=torchvision.__version__,
+                  numpy=np.__version__, pandas=pd.__version__)
+    record['csv_sha256'] = {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+                            for p in sorted(RESULT_DIR.glob('*.csv'))}
+    (RESULT_DIR / 'run_record.json').write_text(json.dumps(record, indent=2))
+    shutil.make_archive(str(RESULT_DIR), 'zip', root_dir=RESULT_DIR.parent, base_dir=RESULT_DIR.name)
+    print('Verified and packed', RESULT_DIR.with_suffix('.zip'))
+
+    from datetime import datetime, timezone
+    record = json.loads((RESULT_DIR / 'run_record.json').read_text())
+    record.update(executed_at_utc=datetime.now(timezone.utc).isoformat(),
+                  execution_backend='Python CLI',
+                  gpu=torch.cuda.get_device_name(0) if torch.cuda.is_available() else None, dataset_md5=actual_md5,
+                  feature_cache_sha256={filename: hashlib.sha256(Path(filename).read_bytes()).hexdigest()
+                                        for filename in CACHE_FILES.values()})
+    record['csv_sha256'] = {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+                            for p in sorted(RESULT_DIR.glob('*.csv'))}
+    (RESULT_DIR / 'run_record.json').write_text(json.dumps(record, indent=2))
+    shutil.make_archive(str(RESULT_DIR), 'zip', root_dir=RESULT_DIR.parent, base_dir=RESULT_DIR.name)
+    print('Completed run:', len(results), 'measurement points;', len(list(RESULT_DIR.glob('*.csv'))), 'CSV files')
+
+if __name__ == "__main__":
+    main()

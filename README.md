@@ -184,7 +184,7 @@ See the [experiment README](experiments/geometric_dynamics/README.md) for instal
 
 - [Scripts](experiments/geometric_dynamics/scripts/): reproducible extraction, analysis, and attention-video generation.
 - [Notebooks](experiments/geometric_dynamics/notebooks/): historical exploratory experiments and existing outputs.
-- [CNN geometry results](experiments/geometric_dynamics/results/block_geometry_metrics.csv): the preserved 122-row export.
+- [CNN geometry results](experiments/geometric_dynamics/results/block_geometry_metrics/): per-metric CSVs for 122 measurement points, paired stratified CKA bootstrap, stage-dip summaries, and run provenance.
 - [DenseNet measured results](experiments/geometric_dynamics/results/densenet_20260930/): 253 geometry observations, 1,265 LLE summaries and 253,000 per-image entropy rows, with the executed notebook and provenance.
 - [Protocol and audit](experiments/geometric_dynamics/docs/protocol.md): methods, source provenance, and interpretation limits.
 

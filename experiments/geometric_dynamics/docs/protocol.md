@@ -27,3 +27,14 @@ Repeat across independent image cohorts and seeds; bootstrap image identities wi
 ## DenseNet extension, 2026-09-30
 
 The [completed requested Colab run](../results/densenet_20260930/) adds DenseNet-121/169/201 V1 with the same archive and original selection algorithm, preprocessing, metric formulas, paired probes and shared LLE permutations. Dense layers read cumulative concatenated channels, verified against actual dense-block output pooling in every batch. Transitions and final norm+ReLU are separate observations. Source, identities, versions and runtime hashes accompany CSVs; activation NPZs remain outside Git. Widths, block allocation and independently trained checkpoints vary, so this is a controlled input/measurement comparison rather than a causal depth-only experiment. Historical NPZ identity checks cannot be claimed because those archives are not in the checkout. See the run README for observed endpoints and final-readout effects.
+
+
+## Stratified CKA bootstrap (October 2026)
+
+The primary readout is adjacent biased linear CKA on raw spatially pooled representations. S and held-out probe are secondary; Fisher, PR, pairwise distances and norms are descriptive. Use one plot per architecture at its own observed layer index.
+
+Draw 100 cats with replacement and 100 dogs with replacement from the observed image identities, repeating 1,000 times (bootstrap seed 20261006). Reuse the same index draw for every layer and all four models; validate both labels and archive paths before pairing. Resample raw Gram matrices on both axes and recenter for each draw. Use pointwise 10th–90th percentile intervals (central 80%). These quantify image-sampling uncertainty conditional on the observed empirical cohort, fixed weights and preprocessing; they do not cover new training seeds or distribution shift.
+
+For each stage, Δ is the median adjacent CKA of its later blocks minus the adjacent CKA of its first block. Export original Δ, p10, median, p90 and the fraction of bootstrap draws with Δ > 0; the fraction is not a p-value or a posterior probability. Exclude stem and standalone downsample observations from this contrast. ConvNeXt first-block adjacencies start at the downsample output, whereas ResNet first-block adjacencies start at the previous stage output; inspect downsample points separately. Within-stage contrasts reduce but do not eliminate depth confounding, and are not a causal downsampling test.
+
+Do not fit probe train/test splits on duplicated bootstrap rows: duplicate image identities could leak across splits. Preserve the existing five paired held-out splits and report their descriptive SD separately.

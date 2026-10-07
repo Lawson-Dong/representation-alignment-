@@ -40,7 +40,7 @@ class ArtifactTests(unittest.TestCase):
     def test_source_hashes(self):
         manifest=json.loads((ROOT/'results/source_manifest.json').read_text())
         for name,info in manifest.items():
-            p=ROOT/'notebooks'/name if name.endswith('.ipynb') else ROOT/'results/block_geometry_metrics.csv'
+            p=ROOT/info['path']
             self.assertEqual(hashlib.sha256(p.read_bytes()).hexdigest(),info['sha256'])
     def test_python_syntax(self):
         for p in (ROOT/'scripts').glob('*.py'):
@@ -50,7 +50,14 @@ class ArtifactTests(unittest.TestCase):
             for i,c in enumerate(n['cells']):
                 if c['cell_type']=='code':compile(''.join(c['source']),f'{p}:{i}','exec')
     def test_cnn_csv(self):
-        with (ROOT/'results/block_geometry_metrics.csv').open() as f: rows=list(csv.DictReader(f))
+        import pandas as pd
+        folder = ROOT/'results/block_geometry_metrics'
+        frames = [pd.read_csv(p) for p in folder.glob('*.csv')
+                  if p.stem in ['CKA_prev', 'S', 'd_within_cos', 'd_between_cos']]
+        merged = frames[0]
+        for frame in frames[1:]:
+            merged = merged.merge(frame, on=['model', 'depth', 'stage', 'boundary'], validate='one_to_one')
+        rows = merged.fillna('').to_dict('records')
         self.assertEqual(len(rows),122)
         for model,count in [('ResNet-18',9),('ResNet-152',51),('ConvNeXt-Tiny',22),('ConvNeXt-Base',40)]:
             r=[q for q in rows if q['model']==model]
@@ -60,6 +67,6 @@ class ArtifactTests(unittest.TestCase):
             self.assertEqual(r[0]['CKA_prev'],'')
             for q in r:
                 self.assertAlmostEqual(float(q['S']),float(q['d_between_cos'])/float(q['d_within_cos']))
-                if q['CKA_prev']:self.assertTrue(0<=float(q['CKA_prev'])<=1+1e-10)
+                if q['CKA_prev'] != '':self.assertTrue(0<=float(q['CKA_prev'])<=1+1e-10)
 
 if __name__=='__main__':unittest.main()
