@@ -46,9 +46,9 @@ class ArtifactTests(unittest.TestCase):
                 if c['cell_type']=='code':compile(''.join(c['source']),f'{p}:{i}','exec')
     def test_cnn_csv(self):
         import pandas as pd
-        folder = ROOT/'results/geometry/cross-model/block_geometry_metrics'
-        frames = [pd.read_csv(p) for p in folder.glob('*.csv')
-                  if p.stem in ['CKA_prev', 'S', 'd_within_cos', 'd_between_cos']]
+        frames = [pd.concat([pd.read_csv(ROOT/'results/geometry'/model/(metric+'.csv'))
+                             for model in ('resnet18','resnet152','convnext_tiny','convnext_base')], ignore_index=True)
+                  for metric in ('CKA_prev','S','d_within_cos','d_between_cos')]
         merged = frames[0]
         for frame in frames[1:]:
             merged = merged.merge(frame, on=['model', 'depth', 'stage', 'boundary'], validate='one_to_one')

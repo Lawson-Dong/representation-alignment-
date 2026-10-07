@@ -12,7 +12,7 @@ The supplied CNN notebook contains execution outputs and exports 122 observation
 
 Maintained scripts remove browser downloads and save headless plots, export CNN vectors during the measurement pass, and extract the actual Python programs embedded in the attention notebook. Attention analysis uses the first attention readout as its cohort reference, resolving its otherwise mandatory, undocumented CNN NPZ prerequisite. The animation docstring incorrectly named ConvNeXt-Tiny; it now names attention models. No new model results are fabricated.
 
-Seven supplied MP4 videos are included in the branch-root [visualization directory](../../../visualization/). Separate activation archives are not included. The completed 44-row attention metrics CSV is preserved in `results/geometry/cross-model/attention_geometry_metrics.csv`.
+Seven supplied MP4 videos are included in the branch-root [visualization directory](../../../visualization/). Separate activation archives are not included. The completed 44-row attention metrics CSV is preserved in `results/geometry/{vit_b16_cls,vit_b16_patchmean,swin_t}/attention_geometry_metrics.csv`.
 
 ## Statistical limits
 
@@ -26,7 +26,7 @@ Repeat across independent image cohorts and seeds; bootstrap image identities wi
 
 ## DenseNet extension, 2026-09-30
 
-The [completed requested Colab run](../results/geometry/cross-model/densenet_20260930/) adds DenseNet-121/169/201 V1 with the same archive and original selection algorithm, preprocessing, metric formulas, paired probes and shared LLE permutations. Dense layers read cumulative concatenated channels, verified against actual dense-block output pooling in every batch. Transitions and final norm+ReLU are separate observations. Source, settings, versions and retained runtime hashes accompany CSVs; activation NPZs remain outside Git. Widths, block allocation and independently trained checkpoints vary, so this is a controlled input/measurement comparison rather than a causal depth-only experiment. Historical NPZ identity checks cannot be claimed because those archives are not in the checkout. See the run README for observed endpoints and final-readout effects.
+The [completed requested Colab run](../results/metadata/densenet_20260930/) adds DenseNet-121/169/201 V1 with the same archive and original selection algorithm, preprocessing, metric formulas, paired probes and shared LLE permutations. Dense layers read cumulative concatenated channels, verified against actual dense-block output pooling in every batch. Transitions and final norm+ReLU are separate observations. Source, settings, versions and retained runtime hashes accompany CSVs; activation NPZs remain outside Git. Widths, block allocation and independently trained checkpoints vary, so this is a controlled input/measurement comparison rather than a causal depth-only experiment. Historical NPZ identity checks cannot be claimed because those archives are not in the checkout. See per-model geometry and LLE summaries for observed endpoints and final-readout effects.
 
 
 ## Stratified CKA bootstrap (October 2026)
@@ -42,3 +42,5 @@ Do not fit probe train/test splits on duplicated bootstrap rows: duplicate image
 ## Published final-output scope
 
 Final layer-wise metrics, interval summaries, endpoint comparisons and plots are retained. Runtime replicate draws, sample/split indices and per-image entropies are excluded from `results/`; original execution records remain in Git history. Current offline checks validate retained outputs and do not reaggregate removed runtime intermediates.
+
+Combined tables and side-by-side panels are removed because they introduce no additional cross-model measurement. Final outputs reside in each model directory; common provenance and hashes reside in `results/metadata/`.

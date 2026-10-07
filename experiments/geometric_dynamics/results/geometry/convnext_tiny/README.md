@@ -1,3 +1,3 @@
-# convnext_tiny geometry
+# convnext_tiny final geometry results
 
-Model-specific tables, preserving the original measured values. Combined exports and common run settings are in [../cross-model/](../cross-model/).
+These are the canonical model-specific measured tables. Common settings, execution records and published hashes are in [../metadata/](../../metadata/). Figures are under [../../figures/](../../figures/). Combined copies are omitted.

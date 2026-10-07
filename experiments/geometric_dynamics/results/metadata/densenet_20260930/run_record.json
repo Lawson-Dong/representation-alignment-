@@ -15,5 +15,5 @@
   },
   "notebook_sha256": "449fd9fbb4cf4449e2d6e80e470d84053d2daa8eaf0dc66986e98f2629455591",
   "validation": "Nine offline tests passed, including per-image entropy reaggregation, paired split integrity, executed embedded-source identity, runtime hashes and geometry transitions. Cumulative state equality also asserted for all four blocks in every model batch during Colab execution.",
-  "publication_policy": "Final layer-wise metric tables, statistical summaries and figures only; intermediate samples, splits, replicate draws and per-image entropy are omitted. Executed notebooks retain their original code and outputs."
+  "publication_policy": "Final geometry, endpoint summaries, layer/k LLE summaries and figures are stored per model. Combined tables and plots are omitted; see ../final_outputs_manifest.json for published hashes."
 }

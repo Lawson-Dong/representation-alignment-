@@ -1,7 +1,3 @@
-# densenet201 geometry
+# densenet201 final geometry results
 
-Model-specific tables, preserving the original measured values. Combined exports and common run settings are in [../cross-model/](../cross-model/).
-
-Local label entropy: [../../lle/densenet201/](../../lle/densenet201/).
-
-Figures: [../../figures/densenet201/](../../figures/densenet201/).
+These are the canonical model-specific measured tables. Common settings, execution records and published hashes are in [../metadata/](../../metadata/). Figures are under [../../figures/](../../figures/). Combined copies are omitted.

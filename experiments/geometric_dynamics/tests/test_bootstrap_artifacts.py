@@ -1,4 +1,4 @@
-"""Verify exported image pairing, replicate integrity and run provenance."""
+"""Verify final bootstrap summaries and published-output provenance."""
 import hashlib
 import json
 from pathlib import Path
@@ -7,7 +7,11 @@ import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT/'results/geometry/cross-model/block_geometry_metrics'
+OUT = ROOT/'results/metadata/cnn_bootstrap'
+MODELS = ('resnet18', 'resnet152', 'convnext_tiny', 'convnext_base')
+
+def final_table(name):
+    return pd.concat([pd.read_csv(ROOT/'results/geometry'/model/name) for model in MODELS], ignore_index=True)
 
 class BootstrapArtifactTests(unittest.TestCase):
     def test_completed_run_and_hashes(self):
@@ -15,14 +19,14 @@ class BootstrapArtifactTests(unittest.TestCase):
         self.assertEqual(record['status'], 'completed')
         self.assertEqual(record['bootstrap_repeats'], 1000)
         self.assertEqual(record['classes'], {'3': 100, '5': 100})
-        for filename, expected in record['csv_sha256'].items():
-            self.assertEqual(hashlib.sha256((OUT/filename).read_bytes()).hexdigest(), expected)
+        for filename, expected in record['published_results_sha256'].items():
+            self.assertEqual(hashlib.sha256((ROOT/'results'/filename).read_bytes()).hexdigest(), expected)
 
 
 
 
     def test_final_bootstrap_summaries(self):
-        summary = pd.read_csv(OUT/'CKA_prev_bootstrap.csv')
+        summary = final_table('CKA_prev_bootstrap.csv')
         self.assertEqual(len(summary), 122)
         self.assertFalse(summary.duplicated(['model', 'depth']).any())
         for row in summary.itertuples():
@@ -30,7 +34,7 @@ class BootstrapArtifactTests(unittest.TestCase):
                 self.assertTrue(np.isnan([row.p10, row.median, row.p90]).all())
             else:
                 self.assertTrue(0 <= row.p10 <= row.median <= row.p90 <= 1 + 1e-10)
-        dips = pd.read_csv(OUT/'boundary_dip.csv')
+        dips = final_table('boundary_dip.csv')
         self.assertEqual(len(dips), 16)
         for row in dips.itertuples():
             self.assertTrue(row.p10 <= row.median <= row.p90)

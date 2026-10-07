@@ -8,11 +8,9 @@
 - [densenet169](densenet169/)
 - [densenet201](densenet201/)
 
-Each CNN folder contains 13 existing figures. Each DenseNet folder contains a geometry figure and an LLE figure, rendered from the existing model-specific CSVs. No model extraction or entropy measurement was rerun.
+Each CNN has 13 final figures. Each DenseNet has a geometry and an LLE figure, rendered from its canonical CSVs. Combined duplicate panels are omitted. Per-model videos are in [visualization](../../../../visualization/).
 
-The two original combined DenseNet figures remain in [shared/densenet_20260930/](shared/densenet_20260930/) as historical runtime artifacts. Per-model videos are in the repository's [visualization directory](../../../../visualization/).
-
-Regenerate the per-model DenseNet figures from the repository root:
+Regenerate the DenseNet figures with:
 
 ```bash
 python experiments/geometric_dynamics/scripts/plot_densenet_results.py

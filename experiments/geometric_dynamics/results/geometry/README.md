@@ -1,8 +1,5 @@
 # Geometry results by model
 
-- [vit_b16_cls](vit_b16_cls/)
-- [vit_b16_patchmean](vit_b16_patchmean/)
-- [swin_t](swin_t/)
 - [resnet18](resnet18/)
 - [resnet152](resnet152/)
 - [convnext_tiny](convnext_tiny/)
@@ -10,7 +7,8 @@
 - [densenet121](densenet121/)
 - [densenet169](densenet169/)
 - [densenet201](densenet201/)
+- [vit_b16_cls](vit_b16_cls/)
+- [vit_b16_patchmean](vit_b16_patchmean/)
+- [swin_t](swin_t/)
 
-[cross-model/](cross-model/) retains combined final tables and common run settings. Per-model CSVs are exact model subsets of those tables. Intermediate bootstrap draws, split indices, sample manifests and per-image entropy are excluded.
-
-Plots: [../figures/](../figures/). Entropy: [../lle/](../lle/).
+Each model directory is the canonical source of its final metrics and statistical summaries. Common settings and hashes are in [../metadata/](../metadata/). No additional cross-model measurement is currently available.
