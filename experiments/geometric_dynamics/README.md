@@ -36,7 +36,7 @@ Install an appropriate matching torch/torchvision build for your CPU or CUDA env
 
 The [new DenseNet notebook](notebooks/Cat_Dog_DenseNet_121_169_201_Matched_Geometry_LLE.ipynb) was executed on the specified Colab T4 on 2026-09-30. Its [CSV exports and provenance](results/metadata/densenet_20260930/) are preserved with offline final-output checks.
 
-The CNN geometry notebook has been replaced with the completed Colab stratified-bootstrap run; its 52 figures are published in the four CNN model folders under `results/figures/`. The attention notebook remains a historical upload. The LLE notebook has been replaced in place with the completed Colab ResNet-152 V2 rerun; only its execution-status markdown was updated after upload, preserving every code cell and output. For local/headless runs use `scripts/`. See [protocol and audit](docs/protocol.md) for execution evidence, corrected stale notebook text, and interpretation limits.
+The CNN geometry notebook has been replaced with the completed Colab stratified-bootstrap run; its 52 original figures are published in the four CNN model folders under `results/figures/`. The attention notebook remains a historical upload. The LLE notebook has been replaced in place with the completed Colab ResNet-152 V2 rerun; only its execution-status markdown was updated after upload, preserving every code cell and output. For local/headless runs use `scripts/`. See [protocol and audit](docs/protocol.md) for execution evidence, corrected stale notebook text, and interpretation limits.
 
 ## Measurements
 
@@ -75,3 +75,7 @@ Repository code is released under the [MIT License](../../LICENSE). External dat
 ## Final-results publication policy
 
 `results/` stores final layer-wise metrics, model-specific endpoint summaries, statistical intervals and figures once per model. `metadata/` stores common settings and provenance. Combined duplicates and side-by-side plots without a separate cross-model measurement are omitted. No `cross-model/` directory is currently needed. Intermediate bootstrap draws, sample/split indices and per-image entropy are excluded. Original executed notebook code and outputs are preserved; historical files can be recovered from Git history.
+
+## Whole-curve bootstrap stability
+
+The primary bootstrap analysis assesses the complete CKA trajectory within each CNN at identical layer identities, rather than assuming a universal first-block drop. Read the [methods, numerical results and limitations](docs/bootstrap_curve_stability.md), then use the [results index](results/README.md) to locate per-model CSVs and figures. Run `python experiments/geometric_dynamics/scripts/analyze_bootstrap_curves.py` from the repository root; this reuses the original saved draws in Git history without rerunning models.

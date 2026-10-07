@@ -51,6 +51,14 @@
     "sha256": "c98effe5c6ae839051b1f713e199e5e17b8bfd0a3c62f8f9a82479d9f4b35368",
     "bytes": 66328
   },
+  "figures/convnext_base/bootstrap_curve_alignment.png": {
+    "sha256": "1157254cdb78997108e1d1399d923a2e0ffb0608eb4ecba36f334e02f037b14f",
+    "bytes": 113143
+  },
+  "figures/convnext_base/bootstrap_curve_deviations.png": {
+    "sha256": "7e3e8d692e1828db424c80a533bd0cefd45cd3777bf6e155b6e6fd52d4a4c2a0",
+    "bytes": 90246
+  },
   "figures/convnext_tiny/ConvNeXt-Tiny_CKA_prev.png": {
     "sha256": "5995a5885e206532ec945dd8b43abb490e0c224341e6512328f5d2e246b2ebec",
     "bytes": 101203
@@ -102,6 +110,14 @@
   "figures/convnext_tiny/ConvNeXt-Tiny_similarity_fingerprint_trajectory.png": {
     "sha256": "d43fe10e757647c9373604c1f0ea05ed43a34314d47114ccadd23e57955ba3fe",
     "bytes": 66722
+  },
+  "figures/convnext_tiny/bootstrap_curve_alignment.png": {
+    "sha256": "f2bde9ed63a40f76cd31d848d7bfe5366c6f579f140ffdb33d0354f1b8785b33",
+    "bytes": 145418
+  },
+  "figures/convnext_tiny/bootstrap_curve_deviations.png": {
+    "sha256": "4238c2b0385268423ab53bb1101a0a343ac27d992f06dc84f484fa4f35a81d6a",
+    "bytes": 94716
   },
   "figures/densenet121/densenet121_geometry.png": {
     "sha256": "8b2bcae90b59cfee6bc2b2093a2299242b49130f0f202b678c838fa76ca60b2b",
@@ -179,6 +195,14 @@
     "sha256": "8d8443b7bc506f30ec6933d6c6ea3402e6f15c3f221b2103a474f7add623dcb8",
     "bytes": 70050
   },
+  "figures/resnet152/bootstrap_curve_alignment.png": {
+    "sha256": "f1502c2e13f9579540bdc33b63311f6b72877d792ee7548a5dba0e363f75e7b4",
+    "bytes": 75416
+  },
+  "figures/resnet152/bootstrap_curve_deviations.png": {
+    "sha256": "af3c047c5c7bf27aec184e051ebd1ac9585c98f03c48f193236c325eeb3de511",
+    "bytes": 79640
+  },
   "figures/resnet18/ResNet-18_CKA_prev.png": {
     "sha256": "1d2d74667fcdb2d70b554dd78b952ff56e063ce1bcf7ef1f94e366f121a0ab21",
     "bytes": 105081
@@ -231,6 +255,14 @@
     "sha256": "b5987da9990d16205cf7a053a4cece375866c4a9fb7b7073765fc8a128f914bd",
     "bytes": 72266
   },
+  "figures/resnet18/bootstrap_curve_alignment.png": {
+    "sha256": "ec8bbaaf678d751ca737f33c42367bb97efa0b508c2886b5c1e0a1c3d71072b7",
+    "bytes": 92109
+  },
+  "figures/resnet18/bootstrap_curve_deviations.png": {
+    "sha256": "543b0738543acd8bb7e971afa8711091614dddeee4e595df6f8dea610d46a042",
+    "bytes": 74564
+  },
   "geometry/convnext_base/CKA_prev.csv": {
     "sha256": "f0618e4ed737fb5a52862bec1e415085bc8092aede01bfba5deea4d414c25b5e",
     "bytes": 1930
@@ -250,6 +282,14 @@
   "geometry/convnext_base/S.csv": {
     "sha256": "f31e866d75bf61895e0708a2cd53bf48fc4a6be3fbee50ff9c9fa7c3754db2ca",
     "bytes": 1944
+  },
+  "geometry/convnext_base/bootstrap_curve_alignment_by_layer.csv": {
+    "sha256": "02ab190fd0ab0be31d39ce4ac79bc21c47de7ec5228d2ea484e10b71eecf02e2",
+    "bytes": 5600
+  },
+  "geometry/convnext_base/bootstrap_curve_alignment_summary.csv": {
+    "sha256": "37fe5f278e4a07af6529612acfb55b4804038ad154edf637b088cfc7bb401d11",
+    "bytes": 889
   },
   "geometry/convnext_base/boundary_dip.csv": {
     "sha256": "02ee0c0240b3a98d68061ba1d6e63b3445e4c6a122c984832274b581c8f114c8",
@@ -306,6 +346,14 @@
   "geometry/convnext_tiny/S.csv": {
     "sha256": "269595790e04298bf314a07d858e45c38ef8ffb4b6a6df9eceb233e483a2f74d",
     "bytes": 1063
+  },
+  "geometry/convnext_tiny/bootstrap_curve_alignment_by_layer.csv": {
+    "sha256": "c97824daa56111d77c2882eaba4dcbc031541fd642c492741f6bce31a5e66c6a",
+    "bytes": 3021
+  },
+  "geometry/convnext_tiny/bootstrap_curve_alignment_summary.csv": {
+    "sha256": "14f8f40818a0e87db5db1cb609da9da116a3ea186f42874e26b636ed5be9d31a",
+    "bytes": 887
   },
   "geometry/convnext_tiny/boundary_dip.csv": {
     "sha256": "c73d29a78f08ba7cb83d504b48e6776639e71bad3e87569d43e655c25e4975a9",
@@ -387,6 +435,14 @@
     "sha256": "de8726363b95283c42ac790af17e51716740175992999798c9095450e9bc79c1",
     "bytes": 2321
   },
+  "geometry/resnet152/bootstrap_curve_alignment_by_layer.csv": {
+    "sha256": "f8c6b672b9aa86465b3907a597cae1ae8a83911bfe0e788b3e0bc00bb8ddcb11",
+    "bytes": 7010
+  },
+  "geometry/resnet152/bootstrap_curve_alignment_summary.csv": {
+    "sha256": "e04e9e1f7938ea8cd71e70e40f90f60c22ea4366a9f0577fd1a309fd095375ee",
+    "bytes": 887
+  },
   "geometry/resnet152/boundary_dip.csv": {
     "sha256": "4b7d30354777529443569ce33aae922f9723a80662c46f59263215f0db293fb0",
     "bytes": 903
@@ -442,6 +498,14 @@
   "geometry/resnet18/S.csv": {
     "sha256": "3fee917984395366fb2a3bd6608b8a449520156b23d7648bb53f8b3a2244309a",
     "bytes": 407
+  },
+  "geometry/resnet18/bootstrap_curve_alignment_by_layer.csv": {
+    "sha256": "270343ecce90d4beace510e1228339862c6701a527778e0f91b7a6df16dce7d0",
+    "bytes": 1163
+  },
+  "geometry/resnet18/bootstrap_curve_alignment_summary.csv": {
+    "sha256": "86a67e017ed67c06b58e9ca6d8f623e050c1a8ee95c2e3f63925fc72efaca31f",
+    "bytes": 866
   },
   "geometry/resnet18/boundary_dip.csv": {
     "sha256": "ec42bd0553e7c7c9d38c25ade9c9452c35604faffbc66898a3295c05a90276f4",

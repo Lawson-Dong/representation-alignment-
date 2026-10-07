@@ -1,0 +1,21 @@
+{
+  "status": "completed",
+  "analysis": "within-model complete CKA curve alignment",
+  "input": {
+    "git_commit": "ce2945f1b997d083701f17c5c00df9be69d3a677",
+    "git_path": "experiments/geometric_dynamics/results/block_geometry_metrics/CKA_prev_bootstrap_replicates.csv",
+    "sha256": "d6d13d0de5badfecdfcbfd315dfa5bbc9c4cfa786ee08a998370740abe0bcbb7"
+  },
+  "reference_sha256": {
+    "geometry/resnet18/CKA_prev.csv": "456d126bb042c9956cccbeff729a49dc6730eb2ed5c7ef448d9abff898374d20",
+    "geometry/resnet152/CKA_prev.csv": "aae85a327ba0fa36fb0f729515c6872867ab6f5018d58408e5e7b5634be96454",
+    "geometry/convnext_tiny/CKA_prev.csv": "2b81f8a6f9733c715a637e0e538a982957b71c12186cfac5784e73722b4f89e8",
+    "geometry/convnext_base/CKA_prev.csv": "f0618e4ed737fb5a52862bec1e415085bc8092aede01bfba5deea4d414c25b5e"
+  },
+  "n_bootstrap": 1000,
+  "alignment": "Identical original depth and stage labels; no interpolation or warping.",
+  "excluded": "Depth 0: adjacent CKA is undefined.",
+  "interval": "Pointwise p10-p90; not simultaneous confidence bands.",
+  "interpretation": "Descriptive resampling stability conditional on the current image cohort and fixed weights; draws are not independent model-training experiments.",
+  "script_sha256": "064e1233f27c0ef181a7b4a9988f7876188a22051e7d9fe63e1057d3303719ff"
+}

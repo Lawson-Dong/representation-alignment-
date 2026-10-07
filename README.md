@@ -182,10 +182,12 @@ Animations help inspect trajectories, but interpretation should rely on the orig
 
 See the [experiment README](experiments/geometric_dynamics/README.md) for installation, execution commands, checkpoint details, and validation.
 
+- [Research results index](experiments/geometric_dynamics/results/README.md): model-specific final outputs and provenance.
+- [Whole-curve bootstrap stability](experiments/geometric_dynamics/docs/bootstrap_curve_stability.md): complete CKA trajectory agreement, numerical error and interpretation limits.
 - [Scripts](experiments/geometric_dynamics/scripts/): reproducible extraction, analysis, and attention-video generation.
 - [Notebooks](experiments/geometric_dynamics/notebooks/): historical exploratory experiments and existing outputs.
 - [CNN geometry results](experiments/geometric_dynamics/results/geometry/): per-metric CSVs for 122 measurement points, paired stratified CKA bootstrap, stage-dip summaries, and run provenance.
-- [DenseNet measured results](experiments/geometric_dynamics/results/metadata/densenet_20260930/): 253 geometry observations, 1,265 final LLE layer/k summaries, with the executed notebook and provenance.
+- [DenseNet measured results](experiments/geometric_dynamics/results/README.md): 253 geometry observations, 1,265 final LLE layer/k summaries, with the executed notebook and provenance.
 - [Protocol and audit](experiments/geometric_dynamics/docs/protocol.md): methods, source provenance, and interpretation limits.
 
 ## Interpretation

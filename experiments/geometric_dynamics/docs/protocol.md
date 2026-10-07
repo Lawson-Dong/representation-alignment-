@@ -44,3 +44,7 @@ Do not fit probe train/test splits on duplicated bootstrap rows: duplicate image
 Final layer-wise metrics, interval summaries, endpoint comparisons and plots are retained. Runtime replicate draws, sample/split indices and per-image entropies are excluded from `results/`; original execution records remain in Git history. Current offline checks validate retained outputs and do not reaggregate removed runtime intermediates.
 
 Combined tables and side-by-side panels are removed because they introduce no additional cross-model measurement. Final outputs reside in each model directory; common provenance and hashes reside in `results/metadata/`.
+
+## Whole-curve resampling analysis
+
+The [whole-curve CKA stability analysis](bootstrap_curve_stability.md) uses all 1,000 saved paired stratified image draws, matches original depth/stage identities and reports shape correlations alongside absolute numerical errors. This is the main resampling-stability interpretation; stage-first-block contrasts remain secondary. Input and reference hashes are recorded separately from original execution provenance.
