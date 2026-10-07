@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT/'results/block_geometry_metrics'
+OUT = ROOT/'results/geometry/block_geometry_metrics'
 
 class BootstrapArtifactTests(unittest.TestCase):
     def test_completed_run_and_hashes(self):

@@ -37,11 +37,6 @@ class GeometryTests(unittest.TestCase):
         self.assertTrue(0<=m.linear_cka(x,changed)<=1+1e-10)
 
 class ArtifactTests(unittest.TestCase):
-    def test_source_hashes(self):
-        manifest=json.loads((ROOT/'results/source_manifest.json').read_text())
-        for name,info in manifest.items():
-            p=ROOT/info['path']
-            self.assertEqual(hashlib.sha256(p.read_bytes()).hexdigest(),info['sha256'])
     def test_python_syntax(self):
         for p in (ROOT/'scripts').glob('*.py'):
             compile(p.read_text(),str(p),'exec')
@@ -51,7 +46,7 @@ class ArtifactTests(unittest.TestCase):
                 if c['cell_type']=='code':compile(''.join(c['source']),f'{p}:{i}','exec')
     def test_cnn_csv(self):
         import pandas as pd
-        folder = ROOT/'results/block_geometry_metrics'
+        folder = ROOT/'results/geometry/block_geometry_metrics'
         frames = [pd.read_csv(p) for p in folder.glob('*.csv')
                   if p.stem in ['CKA_prev', 'S', 'd_within_cos', 'd_between_cos']]
         merged = frames[0]

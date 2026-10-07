@@ -9,12 +9,17 @@ from pathlib import Path
 import unittest
 
 ROOT=Path(__file__).resolve().parents[1]
-RUN=ROOT/'results/densenet_20260930'
+RUN=ROOT/'results/geometry/densenet_20260930'
 COUNTS={'DenseNet-121':63,'DenseNet-169':87,'DenseNet-201':103}
 
 
+def artifact_path(name):
+    category = 'figures' if name.endswith('.png') else 'lle' if '_lle' in name else 'geometry'
+    return ROOT/'results'/category/'densenet_20260930'/name
+
+
 def rows(name):
-    with (RUN/name).open() as f: return list(csv.DictReader(f))
+    with artifact_path(name).open() as f: return list(csv.DictReader(f))
 
 
 class DenseNetArtifacts(unittest.TestCase):
@@ -29,7 +34,7 @@ class DenseNetArtifacts(unittest.TestCase):
         manifest=json.loads((RUN/'artifact_manifest.json').read_text())
         for name,info in manifest.items():
             if name.endswith('.npz'): continue  # runtime-only activations, explicitly omitted
-            self.assertEqual(hashlib.sha256((RUN/name).read_bytes()).hexdigest(),info['sha256'])
+            self.assertEqual(hashlib.sha256(artifact_path(name).read_bytes()).hexdigest(),info['sha256'])
         note=json.loads((ROOT/'notebooks/Cat_Dog_DenseNet_121_169_201_Matched_Geometry_LLE.ipynb').read_text())
         code=next(c for c in note['cells'] if c['cell_type']=='code')
         self.assertEqual(code['execution_count'],1)
