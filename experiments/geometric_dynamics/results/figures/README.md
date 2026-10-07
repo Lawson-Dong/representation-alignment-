@@ -1,6 +1,8 @@
-# Result figures
+# Figures by model
 
-- [CNN geometric dynamics](block_geometry_metrics/): 52 per-model figures.
-- [DenseNet 2026-09-30](densenet_20260930/): geometry and LLE figures.
+- [resnet18](resnet18/)
+- [resnet152](resnet152/)
+- [convnext_tiny](convnext_tiny/)
+- [convnext_base](convnext_base/)
 
-Numerical data are in [../geometry/](../geometry/) and [../lle/](../lle/).
+Each CNN folder contains 13 existing figures. [shared/densenet_20260930/](shared/densenet_20260930/) retains the two DenseNet figures that show multiple models. Per-model DenseNet and attention videos are in the repository's [visualization directory](../../../../visualization/).

@@ -1,6 +1,6 @@
 # DenseNet matched-image Colab run — 2026-09-30
 
-Completed in the [requested Colab notebook](https://colab.research.google.com/drive/18ROQJhjCUETMp6Ih4Y6XwmPe6l0E76o_) on a Tesla T4. Python 3.13.15, torch 2.11.0+cu128, torchvision 0.26.0+cu128; full environment and explicit checkpoint URLs are in `protocol.json`. The [executed notebook](../../../notebooks/Cat_Dog_DenseNet_121_169_201_Matched_Geometry_LLE.ipynb) embeds the exact maintained extraction/measurement source and contains completed numerical tables and plots. No error outputs are saved.
+Completed in the [requested Colab notebook](https://colab.research.google.com/drive/18ROQJhjCUETMp6Ih4Y6XwmPe6l0E76o_) on a Tesla T4. Python 3.13.15, torch 2.11.0+cu128, torchvision 0.26.0+cu128; full environment and explicit checkpoint URLs are in `protocol.json`. The [executed notebook](../../../../notebooks/Cat_Dog_DenseNet_121_169_201_Matched_Geometry_LLE.ipynb) embeds the exact maintained extraction/measurement source and contains completed numerical tables and plots. No error outputs are saved.
 
 ## Controls and observations
 
@@ -26,7 +26,7 @@ The readout change matters: at the last dense state, before norm+ReLU, S is 1.23
 
 ## Files
 
-Geometry tables and shared run provenance are in this directory. LLE tables are in [../../lle/densenet_20260930/](../../lle/densenet_20260930/); plots are in [../../figures/densenet_20260930/](../../figures/densenet_20260930/). Runtime filenames below are preserved in their respective categories.
+Per-model geometry tables are in `../../densenet121/`, `../../densenet169/` and `../../densenet201/`. Per-model LLE tables are under `../../../lle/<model>/`. Combined LLE summaries are in `../../../lle/shared/densenet_20260930/`; combined plots are in `../../../figures/shared/densenet_20260930/`. This directory retains combined geometry tables and shared run provenance.
 
 - `densenet_geometry_metrics.csv`: 253 observations, including S, distances, Fisher, PR, raw norms, CKA, probes and adjacent deltas.
 - `densenet_lle_summary.csv`: 1,265 layer/k summaries, null baselines and high-entropy fractions.

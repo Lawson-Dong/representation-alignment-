@@ -1,0 +1,2 @@
+model,observations,S_first,S_last,within_first,within_last,LLE_k16_first,LLE_k16_last,LLE_k16_increasing_transitions,probe_first,probe_last,min_CKA,min_CKA_at
+DenseNet-121,63,1.0440223696072608,1.3045446188600633,0.04564919361295966,0.3608405475403975,0.9375428963472653,0.11374958858819013,12,0.62,0.9966666666666667,0.44403150777071093,down1

@@ -9,13 +9,14 @@ from pathlib import Path
 import unittest
 
 ROOT=Path(__file__).resolve().parents[1]
-RUN=ROOT/'results/geometry/densenet_20260930'
+RUN=ROOT/'results/geometry/shared/densenet_20260930'
 COUNTS={'DenseNet-121':63,'DenseNet-169':87,'DenseNet-201':103}
 
 
 def artifact_path(name):
     category = 'figures' if name.endswith('.png') else 'lle' if '_lle' in name else 'geometry'
-    return ROOT/'results'/category/'densenet_20260930'/name
+    model = next((slug for slug in ('densenet121', 'densenet169', 'densenet201') if name.startswith(slug + '_')), None)
+    return ROOT/'results'/category/(model if model else 'shared/densenet_20260930')/name
 
 
 def rows(name):
