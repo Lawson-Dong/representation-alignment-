@@ -14,5 +14,6 @@
     "run_densenet_geometry.py": "b0a1681ec41d46acff1a73caf1078c128cc60174a2f20b40ef6b105d689b5061"
   },
   "notebook_sha256": "449fd9fbb4cf4449e2d6e80e470d84053d2daa8eaf0dc66986e98f2629455591",
-  "validation": "Nine offline tests passed, including per-image entropy reaggregation, paired split integrity, executed embedded-source identity, runtime hashes and geometry transitions. Cumulative state equality also asserted for all four blocks in every model batch during Colab execution."
+  "validation": "Nine offline tests passed, including per-image entropy reaggregation, paired split integrity, executed embedded-source identity, runtime hashes and geometry transitions. Cumulative state equality also asserted for all four blocks in every model batch during Colab execution.",
+  "publication_policy": "Final layer-wise metric tables, statistical summaries and figures only; intermediate samples, splits, replicate draws and per-image entropy are omitted. Executed notebooks retain their original code and outputs."
 }

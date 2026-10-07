@@ -28,7 +28,7 @@ The experiments follow the same **100 cat and 100 dog images** through pretraine
 | Swin Transformer | Swin-T | 17 |
 | DenseNet | DenseNet-121; DenseNet-169; DenseNet-201 | 63; 87; 103 |
 
-The [2026-09-30 DenseNet Colab run](experiments/geometric_dynamics/results/geometry/shared/densenet_20260930/) adds three same-family models with matched geometry, LLE and linear probes. Dense-layer observations are cumulative concatenated states; final norm+ReLU is a separate readout. All three checkpoints use explicit V1 weights.
+The [2026-09-30 DenseNet Colab run](experiments/geometric_dynamics/results/geometry/cross-model/densenet_20260930/) adds three same-family models with matched geometry, LLE and linear probes. Dense-layer observations are cumulative concatenated states; final norm+ReLU is a separate readout. All three checkpoints use explicit V1 weights.
 
 Observation counts follow the extraction protocol and are not counts of every computational layer. ViT CLS and patch-mean representations are analyzed as separate readouts.
 
@@ -184,8 +184,8 @@ See the [experiment README](experiments/geometric_dynamics/README.md) for instal
 
 - [Scripts](experiments/geometric_dynamics/scripts/): reproducible extraction, analysis, and attention-video generation.
 - [Notebooks](experiments/geometric_dynamics/notebooks/): historical exploratory experiments and existing outputs.
-- [CNN geometry results](experiments/geometric_dynamics/results/geometry/shared/block_geometry_metrics/): per-metric CSVs for 122 measurement points, paired stratified CKA bootstrap, stage-dip summaries, and run provenance.
-- [DenseNet measured results](experiments/geometric_dynamics/results/geometry/shared/densenet_20260930/): 253 geometry observations, 1,265 LLE summaries and 253,000 per-image entropy rows, with the executed notebook and provenance.
+- [CNN geometry results](experiments/geometric_dynamics/results/geometry/cross-model/block_geometry_metrics/): per-metric CSVs for 122 measurement points, paired stratified CKA bootstrap, stage-dip summaries, and run provenance.
+- [DenseNet measured results](experiments/geometric_dynamics/results/geometry/cross-model/densenet_20260930/): 253 geometry observations, 1,265 final LLE layer/k summaries, with the executed notebook and provenance.
 - [Protocol and audit](experiments/geometric_dynamics/docs/protocol.md): methods, source provenance, and interpretation limits.
 
 ## Interpretation

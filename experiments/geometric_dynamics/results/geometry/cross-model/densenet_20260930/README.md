@@ -26,16 +26,14 @@ The readout change matters: at the last dense state, before norm+ReLU, S is 1.23
 
 ## Files
 
-Per-model geometry tables are in `../../densenet121/`, `../../densenet169/` and `../../densenet201/`. Per-model LLE tables are under `../../../lle/<model>/`. Combined LLE summaries are in `../../../lle/shared/densenet_20260930/`; combined plots are in `../../../figures/shared/densenet_20260930/`. This directory retains combined geometry tables and shared run provenance.
+Per-model geometry tables are in `../../densenet121/`, `../../densenet169/` and `../../densenet201/`; final LLE layer/k summaries are under `../../../lle/<model>/`. Combined final tables are retained here and under `../../../lle/cross-model/densenet_20260930/`. Combined plots are in `../../../figures/cross-model/densenet_20260930/`.
 
-- `densenet_geometry_metrics.csv`: 253 observations, including S, distances, Fisher, PR, raw norms, CKA, probes and adjacent deltas.
-- `densenet_lle_summary.csv`: 1,265 layer/k summaries, null baselines and high-entropy fractions.
-- `densenet121/169/201_lle_per_image.csv`: 63,000 / 87,000 / 103,000 rows (253,000 total), retaining sample indices, paths, labels and entropy.
-- Per-model geometry/LLE summaries and `densenet_endpoint_summary.csv` are direct exports from the run.
-- `sample_manifest.csv`, `probe_splits.csv`, `protocol.json`, `run_record.json`: sample identities, paired splits, environment, checkpoints and execution origin.
-- `artifact_manifest.json`: original runtime SHA-256 hashes. Three listed NPZs are deliberately omitted from Git; all remaining listed files are preserved byte-for-byte.
+- `densenet_geometry_metrics.csv`: all 253 layer observations and final metrics.
+- `densenet_endpoint_summary.csv`: final endpoint comparisons.
+- `protocol.json` and `run_record.json`: settings, environment and execution origin.
+- `artifact_manifest.json`: hashes of retained runtime exports.
 
-The cohort is matched to the historical protocol by the verified archive and identical selection algorithm. Historical CNN activation NPZs are absent from this checkout, so this run does not claim a direct comparison against their stored identities. New-model passes are explicitly checked against the saved sample manifest.
+Per-image entropy, image manifests, probe split indices and activation archives are omitted from the published results. Code and original executed notebook outputs remain available for reproduction.
 
 ## Limits
 
@@ -50,4 +48,4 @@ GEOMETRY_OUTPUT_DIR=outputs/densenet python experiments/geometric_dynamics/scrip
 python -m unittest discover -s experiments/geometric_dynamics/tests -v
 ```
 
-The nine offline checks include reaggregation of all per-image entropies to the summaries, image-order consistency, train/test disjointness and class balance, source identity against the executed notebook, retained runtime hashes, geometry identities and adjacent deltas. They do not replace a pretrained GPU rerun.
+Offline checks validate retained hashes, executed source identity, complete layer/k summaries, geometry identities and adjacent deltas. They do not recompute summaries from omitted intermediate data or replace a pretrained GPU rerun.

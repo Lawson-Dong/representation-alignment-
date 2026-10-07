@@ -11,6 +11,6 @@
 - [densenet169](densenet169/)
 - [densenet201](densenet201/)
 
-[shared/](shared/) preserves combined source tables and common run metadata: CNN bootstrap replicates/sample identities, DenseNet protocol and combined geometry, and attention measurements. Per-model exports preserve source row values; readouts `vit_b16_cls` and `vit_b16_patchmean` are kept separate.
+[cross-model/](cross-model/) retains combined final tables and common run settings. Per-model CSVs are exact model subsets of those tables. Intermediate bootstrap draws, split indices, sample manifests and per-image entropy are excluded.
 
 Plots: [../figures/](../figures/). Entropy: [../lle/](../lle/).

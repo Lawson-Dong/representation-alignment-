@@ -9,14 +9,14 @@ from pathlib import Path
 import unittest
 
 ROOT=Path(__file__).resolve().parents[1]
-RUN=ROOT/'results/geometry/shared/densenet_20260930'
+RUN=ROOT/'results/geometry/cross-model/densenet_20260930'
 COUNTS={'DenseNet-121':63,'DenseNet-169':87,'DenseNet-201':103}
 
 
 def artifact_path(name):
     category = 'figures' if name.endswith('.png') else 'lle' if '_lle' in name else 'geometry'
     model = next((slug for slug in ('densenet121', 'densenet169', 'densenet201') if name.startswith(slug + '_')), None)
-    return ROOT/'results'/category/(model if model else 'shared/densenet_20260930')/name
+    return ROOT/'results'/category/(model if model else 'cross-model/densenet_20260930')/name
 
 
 def rows(name):
@@ -48,20 +48,6 @@ class DenseNetArtifacts(unittest.TestCase):
         for cell in note['cells']:
             self.assertFalse(any(o['output_type']=='error' for o in cell.get('outputs',[])))
 
-    def test_cohort_and_paired_splits(self):
-        sample=rows('sample_manifest.csv')
-        self.assertEqual([int(r['sample_index']) for r in sample],list(range(200)))
-        self.assertEqual(len(set(r['image_path'] for r in sample)),200)
-        for label in ('3','5'): self.assertEqual(sum(r['label']==label for r in sample),100)
-        grouped=defaultdict(dict)
-        for r in rows('probe_splits.csv'): grouped[int(r['split'])].setdefault(r['role'],[]).append(int(r['sample_index']))
-        self.assertEqual(set(grouped),set(range(5)))
-        for roles in grouped.values():
-            self.assertEqual(len(roles['train']),140); self.assertEqual(len(roles['test']),60)
-            self.assertFalse(set(roles['train'])&set(roles['test']))
-            self.assertEqual(set(roles['train'])|set(roles['test']),set(range(200)))
-            for role,n in [('train',70),('test',30)]:
-                for label in ('3','5'): self.assertEqual(sum(sample[i]['label']==label for i in roles[role]),n)
 
     def test_geometry_and_transitions(self):
         data=rows('densenet_geometry_metrics.csv')
@@ -82,27 +68,19 @@ class DenseNetArtifacts(unittest.TestCase):
                 if i: self.assertTrue(0<=float(r['CKA_prev'])<=1+1e-8)
                 else: self.assertEqual(r['CKA_prev'],'')
 
-    def test_pointwise_entropy_matches_summaries(self):
-        sample=rows('sample_manifest.csv')
-        summaries={(r['model'],r['depth'],r['stage'],r['k']):r for r in rows('densenet_lle_summary.csv')}
+
+    def test_final_entropy_summaries(self):
+        summaries=rows('densenet_lle_summary.csv')
         self.assertEqual(len(summaries),1265)
-        grouped=defaultdict(list)
         for model,count in COUNTS.items():
             slug=model.lower().replace('-','')
-            point=rows(slug+'_lle_per_image.csv')
-            self.assertEqual(len(point),count*5*200)
-            for r in point:
-                i=int(r['sample_index']); self.assertEqual(r['label'],sample[i]['label'])
-                self.assertEqual(r['image_path'],sample[i]['image_path'])
-                self.assertEqual(r['model'],model)
-                h=float(r['H']); self.assertTrue(0<=h<=1+1e-12)
-                grouped[(model,r['depth'],r['stage'],r['k'])].append((i,h))
-        self.assertEqual(set(grouped),set(summaries))
-        for key,values in grouped.items():
-            self.assertEqual([i for i,h in values],list(range(200)))
-            r=summaries[key]
-            self.assertAlmostEqual(sum(h for i,h in values)/200,float(r['LLE']))
-            self.assertAlmostEqual(sum(h>=.8 for i,h in values)/200,float(r['fraction_H_ge_0_8']))
+            subset=rows(slug+'_lle_summary.csv')
+            self.assertEqual(subset,[r for r in summaries if r['model']==model])
+            self.assertEqual(len(subset),count*5)
+            self.assertEqual({int(r['k']) for r in subset},{4,8,16,32,64})
+        for r in summaries:
+            self.assertTrue(0<=float(r['LLE'])<=1)
+            self.assertTrue(0<=float(r['fraction_H_ge_0_8'])<=1)
             self.assertAlmostEqual(float(r['order_vs_shuffle']),1-float(r['LLE'])/float(r['shuffle_mean']))
 
 if __name__=='__main__': unittest.main()

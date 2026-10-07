@@ -1,8 +1,4 @@
 {
-  "densenet201_lle_per_image.csv": {
-    "sha256": "e55b6d9388295c259bbf972cb55df20aa9a6a17da3eadda6698789b6d7422032",
-    "bytes": 8081405
-  },
   "densenet_geometry_metrics.csv": {
     "sha256": "01e4c6d2b218e273d928ebfda296444c39609dae9e6beddce9015e44f5339a4f",
     "bytes": 85579
@@ -19,18 +15,6 @@
     "sha256": "b4cd10a25134b60e9573763d14edadd78b050cd92cfcd8bae32df16ab735c6d2",
     "bytes": 188605
   },
-  "densenet121_lle_per_image.csv": {
-    "sha256": "f507c0767ecddcb80ce043ded6b846af19a66d3c2e682e368a445d3ca00b74b4",
-    "bytes": 4955992
-  },
-  "densenet121_per_image_vectors.npz": {
-    "sha256": "459b33cb6e788d7b5b392adfd7f0d93d861c4c3062b6457cef3260dfc32567ff",
-    "bytes": 26115207
-  },
-  "probe_splits.csv": {
-    "sha256": "812046cedfc138f8dbdc5105a42ce6be113fbc514279cf74f8c7027953d10987",
-    "bytes": 11174
-  },
   "densenet201_lle_summary.csv": {
     "sha256": "ae8c26bc88ac82a5078051ba5a223f870c7ba9cc224108f67fe9a185b1d8e44a",
     "bytes": 56321
@@ -38,14 +22,6 @@
   "densenet_geometry.png": {
     "sha256": "e762fb068e341ea9aecbb8e5c38d35e1392045e01f3a3030effc83bc15896a19",
     "bytes": 275428
-  },
-  "densenet169_lle_per_image.csv": {
-    "sha256": "b47e32e6df637b73f654d7a084acfb96e9f84f9d7373df406d2bbc8df2e386fd",
-    "bytes": 6802929
-  },
-  "densenet201_per_image_vectors.npz": {
-    "sha256": "fbc761101d31dde23e0ce183ad84bdc486a09243c514cad3faef88bb3c8c22e5",
-    "bytes": 76675968
   },
   "densenet121_geometry.csv": {
     "sha256": "886fbcd3d7cac0158201c62252e5488a520b1ee09ac0d351da034469b2215d9c",
@@ -63,10 +39,6 @@
     "sha256": "12aded3fe624e17cffdd57f9a706c62ba8416ccf3728548d9acbf07e69cae258",
     "bytes": 34377
   },
-  "sample_manifest.csv": {
-    "sha256": "a882d9a66c922b8c168326452f80ad87225ed60669a42877e7aea097b50d8352",
-    "bytes": 8661
-  },
   "densenet_endpoint_summary.csv": {
     "sha256": "7728d773533e229219adc3bdb29af636223209595c85a8ef8c6661ed87205242",
     "bytes": 708
@@ -74,9 +46,5 @@
   "densenet169_lle_summary.csv": {
     "sha256": "82a86a07c8aa156a9e90fd80aa80d826e353f50a6b88b54bc5ca1f4883c2f8aa",
     "bytes": 47490
-  },
-  "densenet169_per_image_vectors.npz": {
-    "sha256": "77d6f20f55d86d6f62f37719cea9c57199da537f9961cea322dcbee2f906dbf7",
-    "bytes": 52065129
   }
 }
