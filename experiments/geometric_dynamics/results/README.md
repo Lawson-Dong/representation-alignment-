@@ -4,10 +4,10 @@ Final outputs are stored once per model. Metadata records settings and provenanc
 
 | Model / readout | Final geometry | Final LLE CSVs | Figures |
 |---|---|---|---|
-| ResNet-18 | [geometry](geometry/resnet18/) | Executed CNN LLE notebook only | [figures](figures/resnet18/) |
-| ResNet-152 V2 | [geometry](geometry/resnet152/) | Executed CNN LLE notebook only | [figures](figures/resnet152/) |
-| ConvNeXt-Tiny | [geometry](geometry/convnext_tiny/) | Executed CNN LLE notebook only | [figures](figures/convnext_tiny/) |
-| ConvNeXt-Base | [geometry](geometry/convnext_base/) | Executed CNN LLE notebook only | [figures](figures/convnext_base/) |
+| ResNet-18 | [geometry](geometry/resnet18/) | [Executed CNN LLE notebook](../notebooks/Cat_Dog_LLE_Matched_Samples_resnet_convnext.ipynb) | [figures](figures/resnet18/) |
+| ResNet-152 V2 | [geometry](geometry/resnet152/) | [Executed CNN LLE notebook](../notebooks/Cat_Dog_LLE_Matched_Samples_resnet_convnext.ipynb) | [figures](figures/resnet152/) |
+| ConvNeXt-Tiny | [geometry](geometry/convnext_tiny/) | [Executed CNN LLE notebook](../notebooks/Cat_Dog_LLE_Matched_Samples_resnet_convnext.ipynb) | [figures](figures/convnext_tiny/) |
+| ConvNeXt-Base | [geometry](geometry/convnext_base/) | [Executed CNN LLE notebook](../notebooks/Cat_Dog_LLE_Matched_Samples_resnet_convnext.ipynb) | [figures](figures/convnext_base/) |
 | DenseNet-121 | [geometry](geometry/densenet121/) | [LLE](lle/densenet121/) | [figures](figures/densenet121/) |
 | DenseNet-169 | [geometry](geometry/densenet169/) | [LLE](lle/densenet169/) | [figures](figures/densenet169/) |
 | DenseNet-201 | [geometry](geometry/densenet201/) | [LLE](lle/densenet201/) | [figures](figures/densenet201/) |
